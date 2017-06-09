@@ -1,0 +1,12 @@
+{
+    "name": "NotesApi",
+    "description": "...",
+    "repository": "https://github.com/heroku/...",
+    "logo": "https://cdn.rawgit.com/heroku/.../master/public/node.svg",
+    "keywords": [
+        "node",
+        "express",
+        "heroku"
+    ],
+    "image": "heroku/nodejs"
+}

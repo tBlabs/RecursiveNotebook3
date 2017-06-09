@@ -1,0 +1,30 @@
+#textarea-box
+{
+    -webkit-box-flex: 1;
+        -ms-flex: 1;
+            flex: 1; 
+    display: -webkit-box; 
+    display: -ms-flexbox; 
+    display: flex;
+}
+
+textarea 
+{ 
+    -webkit-box-flex: 1; 
+        -ms-flex: 1; 
+            flex: 1;
+    width: 98%; 
+    margin: 12px 1%; 
+    padding: 12px; 
+    border: 1px solid #ddd;
+} 
+
+#textarea-inputs-box
+{
+    text-align: right;
+}
+
+#textarea-inputs-box button
+{ 
+    margin: 0 1% 12px 
+}

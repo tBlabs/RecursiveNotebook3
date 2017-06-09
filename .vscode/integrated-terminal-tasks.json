@@ -1,0 +1,7 @@
+{
+    "ttt": 
+    {
+        "cmd": "echo",
+        "args": [ "dupa" ],
+        "stealFocus": "true"
+    }

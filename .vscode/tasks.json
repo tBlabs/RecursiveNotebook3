@@ -1,0 +1,104 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "0.1.0",
+    "_runner": "terminal",
+    "tasks": [
+        {
+            "taskName": "fastdeploy",
+            "isShellCommand": true,
+            "command": "npm",
+            "args": [
+                "run", "fastdeploy"
+            ],
+            "showOutput": "always",
+            "echoCommand": true
+        },
+        {
+            "taskName": "log",
+            "isShellCommand": true,
+            "command": "heroku",
+            "args": [
+                "logs",
+                "--tail"
+            ],
+            "showOutput": "always",
+            "echoCommand": true
+        },
+        {
+            "taskName": "clean",
+            "isShellCommand": true,
+            "command": "rm",
+            "args": [
+                "${workspaceRoot}/bin",
+                "-rf"
+            ],
+            "showOutput": "always",
+            "echoCommand": true
+        },
+        {
+            "taskName": "build",
+            "isBuildCommand": true,
+            "isShellCommand": true,
+            "command": "tsc",
+            "args": [
+                "-p",
+                "."
+            ],
+            "showOutput": "always",
+            "problemMatcher": "$tsc",
+            "echoCommand": true
+        },
+        {
+            "taskName": "test",
+            "isTestCommand": true,
+            "isShellCommand": true,
+            "command": "jasmine",
+            "args": [
+                "--config=src/spec/support/jasmine.json"
+            ],
+            "showOutput": "always"
+        },
+        {
+            "taskName": "sayhi",
+            "isShellCommand": true,
+            "command": "echo",
+            "args": [
+                "hi", "there!"
+            ],
+            "showOutput": "always",
+            "echoCommand": true
+        },
+        {
+            "taskName": "curlLoginQuery",
+            "isShellCommand": true,
+            "command": "curl",
+            "args": [
+                "-X", "POST",
+                "--header", "'Content-Type:application/json'",
+                "--data-raw", "\"{'LoginQuery': {'email':'tB', 'password':'pass'}}\"",
+                "--url", "localhost:3000/api/cqrsbus"
+            ],
+            "showOutput": "never"
+        },   
+        {
+            "taskName": "curl-Get-Test",
+            "isShellCommand": true,
+            "command": "curl",
+            "args": [
+                "-X", "GET",
+                "--url", "localhost:3000/test"
+            ],
+            "showOutput": "always"
+        },   
+        {
+            "taskName": "herokuBash",
+            "isShellCommand": false,
+            "command": "heroku",
+            "args": [
+                "run", "bash"
+            ],
+            "showOutput": "always"
+        }
+    ]
+}

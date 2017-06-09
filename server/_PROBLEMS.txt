@@ -1,0 +1,36 @@
+
+^U heroku
+    +b - bash
+    +d - deploy
+    +f - fastdeploy
+
+^H - host/server
+^L - client commands
+    +b - build
+    +r - run
+    +t - test
+    +c - clean
+
+
+
+
+Chain tasks in VS Code
+
+    Is it possible?
+
+
+
+ 
+
+
+Why typescrpt need to be installed globally to make mongo import work?
+
+    Without global TS instalation compiler complains about 
+    some types.....
+
+
+
+
+How to remove index.ts in /handlers?
+
+    This file is required because of exports which probably calls AssignMessage decorator

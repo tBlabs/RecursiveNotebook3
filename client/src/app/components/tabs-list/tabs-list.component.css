@@ -1,0 +1,15 @@
+.active-tab
+{
+    font-weight: bold;
+}
+
+.little-margin-top
+{
+    margin-top: 12px;
+}
+  
+ul li,
+ul li a
+{
+    cursor: pointer;
+}

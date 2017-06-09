@@ -1,0 +1,51 @@
+tabs
+{
+    -webkit-box-flex: 1;
+    -ms-flex: 1;
+        flex: 1;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    height: 100%; 
+}
+
+.header 
+{  
+    display: -webkit-box;  
+    display: -ms-flexbox;  
+    display: flex;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between; 
+    background: #333;
+    margin: 0;
+    padding: 12px;
+}
+
+.header span.title 
+{ 
+    -webkit-box-flex: 1; 
+        -ms-flex: 1; 
+            flex: 1; 
+    font-size: 24px; 
+    color: #eee;   
+    margin: 0;
+    padding: 0; 
+}
+
+.header auth
+{
+    -webkit-box-flex: 2;
+        -ms-flex: 2;
+            flex: 2;   
+    text-align: right;
+}
+
+.margin-top 
+{ 
+    margin-top: 72px;
+}
