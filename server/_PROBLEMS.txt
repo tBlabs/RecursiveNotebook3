@@ -1,3 +1,23 @@
+WARNING!
+
+`npm i --prefix server` is not working!
+
+    The only way to solve this problem is to copy node_modules to server after `npm i`.
+
+
+
+typescript must be installed globaly!
+
+    Otherwise types/mongodb throws errors during compilation.
+
+
+
+server/bin can not be in .gitignore
+
+    Heroku is not able to build typescript code without typescript globally installed!
+    There is too much work to do it manually.
+
+
 
 ^U heroku
     +b - bash
