@@ -146,7 +146,7 @@ var CqrsBus = (function () {
     function CqrsBus(_http, _storage) {
         this._http = _http;
         this._storage = _storage;
-        this.API = 'http://localhost:3000/api/cqrsbus';
+        this.API = 'https://localhost:3000/api/cqrsbus';
     }
     CqrsBus.prototype.Send = function (message) {
         // Message class ---into---> { class_name: { class_fields }}

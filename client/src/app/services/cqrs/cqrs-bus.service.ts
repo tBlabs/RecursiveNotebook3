@@ -9,7 +9,7 @@ import 'rxjs';
 @Injectable()
 export class CqrsBus
 {
-    private API: string = 'http://localhost:3000/api/cqrsbus';
+    private API: string = 'https://localhost:3000/api/cqrsbus';
 
 
     constructor(private _http: Http, private _storage: StorageService) { }
