@@ -9,10 +9,13 @@ import 'rxjs';
 @Injectable()
 export class CqrsBus
 {
-    private API: string = 'https://localhost:3000/api/cqrsbus';
+    private API: string = '';//https://localhost:3000/api/cqrsbus';
 
 
-    constructor(private _http: Http, private _storage: StorageService) { }
+    constructor(private _http: Http, private _storage: StorageService)
+    {
+        this.API = 'api/cqrsbus';
+     }
 
 
     public Send(message: ICommand | IQuery<any>): Observable<any>
