@@ -10,7 +10,7 @@ var inversify_1 = require("inversify");
 require("reflect-metadata");
 var DatabaseConfig = (function () {
     function DatabaseConfig() {
-        this.connectionString = 'mongodb://localhost:27017/sandbox';
+        this.connectionString = 'mongodb://admin:password@ds163701.mlab.com:63701/heroku_ghczz41z' || 'mongodb://localhost:27017/sandbox';
     }
     return DatabaseConfig;
 }());
