@@ -1,5 +1,4 @@
 import { UpdateNoteCommandHandler } from './../../handlers/notes/UpdateNoteCommandHandler';
-import { UnathorizedException } from './../../handlers/exceptions/UnathorizedException';
 import { Context } from './../../framework/Context';
 import { AddNoteCommand } from './../../messages/notes/AddNoteCommand';
 import { AddNoteCommandHandler } from './../../handlers/notes/AddNoteCommandHandler';
@@ -26,7 +25,7 @@ describe("UpdateNoteHandler", () =>
         updateNoteCommand.id = "00000000-1111-0000-0000-000000000000";
         updateNoteCommand.parentId = "00000000-0000-0000-0000-000000000000";
         updateNoteCommand.title = "updated title";
-        context = new Context(); 
+        context = new Context();
 
         const noteEntity = new NoteEntity();
         noteEntity.id = "00000000-1111-0000-0000-000000000000";
@@ -39,7 +38,7 @@ describe("UpdateNoteHandler", () =>
     });
 
     it("should update note", async (done) =>
-    {      
+    {
         context.user.claims.canChangeNote = true;
 
         try
@@ -50,9 +49,9 @@ describe("UpdateNoteHandler", () =>
         }
         catch (e)
         {
-            expect(true).toBeFalsy("Should never get here! Exception: "+JSON.stringify(e));
+            expect(true).toBeFalsy("Should never get here! Exception: " + JSON.stringify(e));
         }
 
         done();
-    }); 
+    });
 });

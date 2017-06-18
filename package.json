@@ -1,41 +1,35 @@
 {
   "name": "r-book",
   "version": "1.0.0",
-  "description": "",
+  "description": "recursive notebook",
   "main": "server/startup.js",
   "engines": {
     "node": "7.9.0",
     "npm": "4.2.0"
   },
-  "scripts": 
-  {
-    "init": "npm i && mv ./node_modules ./server && sudo npm i typescript -g",
-
+  "scripts": {
+    "init": "npm i && rm ./server/node_modules -rf && mv ./node_modules ./server -f && sudo npm i typescript -g",
     "cleanserver": "rm server/bin -rf",
-
     "buildclient": "cd client && ng build",
-    "buildserver": "tsc -p server",
+    "buildserver": "cp shared server/src -r && tsc -p server",
     "buildall": "npm run buildserver && npm run buildclient",
-
     "start": "node server/bin/startup.js",
-
     "runclient": "cd client && ng serve",
     "runserver": "npm run start",
-
     "buildandrunserver": "npm run buildserver && npm run runserver",
-
     "deploy": "git push heroku master && heroku logs --tail",
     "fastdeploy": "npm run buildall && git add . && git commit -m \"fast deploy\" && npm run deploy",
-
-    "testserver": "npm run buildserver && jasmine --config=src/spec/support/jasmine.json"
+    "testserver": "npm run buildserver && jasmine --config=./server/src/spec/support/jasmine.json"
   },
   "author": "tB",
   "license": "freeBeer",
   "devDependencies": {
-    "@types/node": "^7.0.18", 
+    "@types/http-status-codes": "^1.0.29",
+    "@types/node": "^7.0.18",
     "typescript": "^2.3.4"
   },
   "dependencies": {
+    "@angular/material": "^2.0.0-beta.6",
     "@types/body-parser": "^1.16.3",
     "@types/express": "^4.0.35",
     "@types/jasmine": "^2.5.41",
@@ -46,6 +40,7 @@
     "body-parser": "^1.17.1",
     "express": "^4.15.2",
     "express-cors": "0.0.3",
+    "http-status-codes": "^1.1.6",
     "inversify": "^4.1.0",
     "jasmine": "^2.6.0",
     "jasmine-core": "^2.6.1",
@@ -53,6 +48,7 @@
     "mongodb": "^2.2.28",
     "os": "^0.1.1",
     "reflect-metadata": "^0.1.10",
-    "uuid": "^3.0.1"
+    "uuid": "^3.0.1",
+    "validator.ts": "^0.2.2"
   }
 }

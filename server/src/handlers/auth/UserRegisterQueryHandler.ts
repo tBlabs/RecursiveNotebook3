@@ -2,19 +2,18 @@ import { injectable, Container } from 'inversify';
 import 'reflect-metadata';
 import { Context } from "../../framework/Context";
 import { Database } from "../../database/Database";
-import { IMessageHandler } from "../../cqrs/IQuery.interface";
 import { UserRegisterQuery } from "../../messages/auth/UserRegisterQuery";
 import { UserEntity } from "../../entities/UserEntity";
 import { v4 as RandomGuid } from 'uuid';
 import { Auth } from "../../services/auth";
 import { User } from "../../framework/User";
-import { UserAlreadyExistsException } from "../exceptions/UserAlreadyExistsException";
 import { AssignMessage } from "../../decorators/AssignMessage";
 import { Claims } from "../../framework/Claims";
+import { IQueryHandler } from "../../cqrs/IQueryHandler";
 
 @AssignMessage(UserRegisterQuery)
 @injectable()
-export class UserRegisterQueryHandler implements IMessageHandler
+export class UserRegisterQueryHandler implements IQueryHandler
 {
     constructor(private _db: Database, private _auth: Auth) { }
 
@@ -26,7 +25,7 @@ export class UserRegisterQueryHandler implements IMessageHandler
 
         if (item)
         {
-            throw new UserAlreadyExistsException();
+      //      throw new UserAlreadyExistsException();
         }
 
         let newUserClaims = new Claims();

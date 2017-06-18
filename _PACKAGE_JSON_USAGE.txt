@@ -1,0 +1,14 @@
+Adding new package to server:
+
+    (1) Add package manually to package.json in main catalog
+    (2) Run 'npm run init' (this will move files in right place)
+
+    This is not working:
+        npm i {package name} -S --prefix server
+
+
+-------------------------------------------------------------------
+
+Adding new package to client:
+
+    cd client && npm i {package name} -S

@@ -12,8 +12,8 @@
             },
           
             "name": "DEBUG",
-            "outFiles": ["${workspaceRoot}/bin/**/*.js"],
-            "program": "${workspaceRoot}/src/startup.ts",
+            "outFiles": ["${workspaceRoot}/server/bin/**/*.js"],
+            "program": "${workspaceRoot}/server/src/startup.ts",
             "request": "launch",
             "runtimeArgs": [
                 "--nolazy"
@@ -22,7 +22,6 @@
             "sourceMaps": true,
             "stopOnEntry": false,
             "type": "node",
-            "preLaunchTask": "build",
             "console": "internalConsole",
             "internalConsoleOptions": "openOnSessionStart"
         },

@@ -40,10 +40,10 @@
             "taskName": "build",
             "isBuildCommand": true,
             "isShellCommand": true,
-            "command": "tsc",
+            "command": "npm",
             "args": [
-                "-p",
-                "."
+                "run",
+                "buildserver"
             ],
             "showOutput": "always",
             "problemMatcher": "$tsc",

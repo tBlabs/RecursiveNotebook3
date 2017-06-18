@@ -1,6 +1,5 @@
 import { DatabaseConfig } from './database/DatabaseConfig';
 import { INotesRepo } from './repositories/INotesRepo';
-import { IMessageHandler } from './cqrs/IQuery.interface';
 import { Container } from 'inversify';
 import { Auth } from "./services/auth";
 import { NotesRepo } from "./repositories/NotesRepo";

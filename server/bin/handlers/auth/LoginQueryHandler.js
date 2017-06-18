@@ -44,15 +44,15 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var HandlerException_1 = require("./../../framework/HandlerException");
 var inversify_1 = require("inversify");
 require("reflect-metadata");
 var Database_1 = require("../../database/Database");
 var auth_1 = require("../../services/auth");
-var UserNotFoundException_1 = require("../exceptions/UserNotFoundException");
-var WrongPasswordException_1 = require("../exceptions/WrongPasswordException");
 var User_1 = require("../../framework/User");
 var LoginQuery_1 = require("../../messages/auth/LoginQuery");
 var AssignMessage_1 = require("../../decorators/AssignMessage");
+var errors_1 = require("../../shared/errors/errors");
 var LoginQueryHandler = (function () {
     function LoginQueryHandler(_db, _auth) {
         this._db = _db;
@@ -70,11 +70,11 @@ var LoginQueryHandler = (function () {
                     case 2:
                         entry = _a.sent();
                         if ((entry.ok != 1) || (entry.value == null)) {
-                            throw new UserNotFoundException_1.UserNotFoundException();
+                            throw new HandlerException_1.HandlerException(errors_1.Ex.UserNotExists);
                         }
                         userEntity = entry.value;
                         if (userEntity.password != query.password) {
-                            throw new WrongPasswordException_1.WrongPasswordException();
+                            throw new HandlerException_1.HandlerException(errors_1.Ex.WrongPassword);
                         }
                         user = new User_1.User();
                         user.id = userEntity.id;

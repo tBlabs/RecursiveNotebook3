@@ -47,7 +47,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var UnathorizedException_1 = require("./../exceptions/UnathorizedException");
 var inversify_1 = require("inversify");
 require("reflect-metadata");
 var NoteEntity_1 = require("../../entities/NoteEntity");
@@ -64,13 +63,13 @@ var AddNoteCommandHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         if (!context.user.claims.canAddNote) {
-                            throw new UnathorizedException_1.UnathorizedException();
                         }
                         note = new NoteEntity_1.NoteEntity();
                         note.id = command.id;
                         note.parentId = command.parentId;
                         note.userId = context.user.id;
                         note.title = command.title;
+                        note.content = '';
                         return [4, this._notes.Add(note)];
                     case 1: return [2, _a.sent()];
                 }

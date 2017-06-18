@@ -52,7 +52,6 @@ var UserEntity_1 = require("../../entities/UserEntity");
 var uuid_1 = require("uuid");
 var auth_1 = require("../../services/auth");
 var User_1 = require("../../framework/User");
-var UserAlreadyExistsException_1 = require("../exceptions/UserAlreadyExistsException");
 var AssignMessage_1 = require("../../decorators/AssignMessage");
 var Claims_1 = require("../../framework/Claims");
 var UserRegisterQueryHandler = (function () {
@@ -72,7 +71,6 @@ var UserRegisterQueryHandler = (function () {
                     case 2:
                         item = _a.sent();
                         if (item) {
-                            throw new UserAlreadyExistsException_1.UserAlreadyExistsException();
                         }
                         newUserClaims = new Claims_1.Claims();
                         newUserClaims.canAddNote = true;

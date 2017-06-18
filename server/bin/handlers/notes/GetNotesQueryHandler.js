@@ -51,7 +51,6 @@ var inversify_1 = require("inversify");
 require("reflect-metadata");
 var GetNotesQuery_1 = require("../../messages/notes/GetNotesQuery");
 var AssignMessage_1 = require("../../decorators/AssignMessage");
-var UnathorizedException_1 = require("../exceptions/UnathorizedException");
 var GetNotesQueryHandler = (function () {
     function GetNotesQueryHandler(_notes) {
         this._notes = _notes;
@@ -62,7 +61,6 @@ var GetNotesQueryHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         if (!context.user.claims.canReadNote) {
-                            throw new UnathorizedException_1.UnathorizedException();
                         }
                         return [4, this._notes.GetChildren(query.parentId, context.user.id)];
                     case 1: return [2, _a.sent()];

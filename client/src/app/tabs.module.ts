@@ -5,7 +5,7 @@ import { EditableOnceComponent } from './components/editable-once/editable-once.
 import { DynamicTabsComponent } from './components/tabs/tabs.component';
 import { FocusModule } from 'angular2-focus';
 import { Http, HttpModule } from '@angular/http';
-import { NgModule } from '@angular/core';
+import { NgModule, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ContextMenuModule } from 'angular2-contextmenu';

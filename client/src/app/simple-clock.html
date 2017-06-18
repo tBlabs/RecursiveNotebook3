@@ -1,0 +1,124 @@
+<template>
+    <style>
+        .container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30px;
+            background: blue;
+            color: #ddd;
+            xmargin: 300px auto 0;
+        }
+        
+        .container.yellow {
+            background: yellow;
+        }
+        
+        .container.gray {
+            background: #333;
+        }
+        
+        .clock {
+            line-height: 30px;
+            font-size: 15px;
+            text-align: center;
+        }
+    </style>
+    <div class="container">
+        <div class="clock">00:00:00</div>
+    </div>
+</template>
+
+<script>
+    const thisDoc = (document._currentScript || document.currentScript).ownerDocument;
+    const template = thisDoc.querySelector('template').content;
+
+
+    class SimpleClock extends HTMLElement    
+    {
+        constructor(args)
+        {
+            super();
+            console.log("my clock!");
+            this.shadow = this.attachShadow({ mode: 'open' });
+        }
+
+    
+        onClick(e)
+        {       
+            console.log("clicked!!!");
+            this.dispatchEvent(new CustomEvent('clicked',
+                {
+                    detail: { foo: "bar" },
+                    bubbles: false
+                }));
+        }
+
+        CacheDOM()
+        {
+            // const importDocument = thatDoc;// document.currentScript.ownerDocument;
+            // const template = importDocument.querySelector('template').content.cloneNode(true);
+            this.shadow.appendChild(template);
+            this.$container = this.shadow.querySelector('.container');
+            this.$clock = this.shadow.querySelector('.clock');
+        }
+
+        static get observedAttributes()
+        {
+            return [ "theme" ];
+        }
+
+        connectedCallback()
+        {
+            console.log("connected");
+
+            this.CacheDOM();
+
+            this.addEventListener('click', this.onClick);
+
+            let time = this.getAttribute('time');
+
+            this.SetClock(time);
+            this.RunClock();
+        }
+
+        UpdateTheme(theme)
+        {
+            console.log("New theme: " + theme);
+            this.$container.className = "container " + theme;
+        }
+
+        attributeChangedCallback(attr, oldValue, newValue)
+        {
+            if (attr === "theme")
+            {
+                this.UpdateTheme(newValue);
+            }
+        }
+
+        RunClock()
+        {
+            this.d = 1;
+
+            setInterval(() =>
+            {
+                let date = new Date();
+                let timeNow = date.toLocaleTimeString("en-GB", { hour12: false });
+                this.d = 1 - this.d;
+
+                if (this.d) timeNow = timeNow.replace(/:/g, ' ');
+                this.SetClock(timeNow);
+            },
+                500);
+        }
+
+        SetClock(time)
+        {
+            this.$clock.innerHTML = time;
+        }
+    }
+
+    window.customElements.define("simple-clock", SimpleClock);
+
+</script>

@@ -101,7 +101,6 @@ describe('User Register Query Handler', function () {
                     ex_1 = _a.sent();
                     if (ex_1 instanceof HandlerException_1.HandlerException) {
                         e = ex_1;
-                        expect(e.message).toBe("Email taken");
                     }
                     return [3, 6];
                 case 6:

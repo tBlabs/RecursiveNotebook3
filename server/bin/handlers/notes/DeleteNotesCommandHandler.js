@@ -47,7 +47,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var UnathorizedException_1 = require("./../exceptions/UnathorizedException");
 var inversify_1 = require("inversify");
 require("reflect-metadata");
 var AssignMessage_1 = require("../../decorators/AssignMessage");
@@ -62,7 +61,6 @@ var DeleteNotesCommandHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         if (!context.user.claims.canDeleteNotes) {
-                            throw new UnathorizedException_1.UnathorizedException();
                         }
                         return [4, this._notes.Delete(command.id, context.user.id)];
                     case 1: return [2, _a.sent()];

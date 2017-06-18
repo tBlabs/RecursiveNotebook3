@@ -1,18 +1,16 @@
-import { UnathorizedException } from './../exceptions/UnathorizedException';
 import { injectable, Container, inject } from 'inversify';
 import 'reflect-metadata';
-import { IMessageHandler } from "../../cqrs/IQuery.interface";
 import { Context } from "../../framework/Context";
 import { NoteEntity } from "../../entities/NoteEntity";
 import { AddNoteCommand } from "../../messages/notes/AddNoteCommand";
 import { AssignMessage } from "../../decorators/AssignMessage";
 import { INotesRepo } from "../../repositories/INotesRepo";
 import { NotesRepo } from "../../repositories/NotesRepo";
-
+import { IQueryHandler } from "../../cqrs/IQueryHandler";
 
 @AssignMessage(AddNoteCommand)
 @injectable()
-export class AddNoteCommandHandler implements IMessageHandler
+export class AddNoteCommandHandler implements IQueryHandler
 {
     constructor(@inject("INotesRepo") private _notes: INotesRepo) { }
 
@@ -20,7 +18,7 @@ export class AddNoteCommandHandler implements IMessageHandler
     {    
         if (!context.user.claims.canAddNote)
         {
-            throw new UnathorizedException();
+           // throw new UnathorizedException();
         }
 
         let note: NoteEntity = new NoteEntity();
@@ -28,6 +26,7 @@ export class AddNoteCommandHandler implements IMessageHandler
         note.parentId = command.parentId;
         note.userId = context.user.id;
         note.title = command.title;
+        note.content = ''; // Without it 'content' field will not be added to database (this will result with 'undefined' test in content field during rendering)
 
         return await this._notes.Add(note);
     }

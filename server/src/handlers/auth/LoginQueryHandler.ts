@@ -1,26 +1,54 @@
+import { HandlerException } from './../../framework/HandlerException';
 import { UserEntity } from './../../entities/UserEntity';
 import { injectable, Container } from 'inversify';
 import 'reflect-metadata';
-import { IMessageHandler } from "../../cqrs/IQuery.interface";
 import { Context } from "../../framework/Context";
 import { Database } from "../../database/Database";
 import { Auth } from "../../services/auth";
-import { UserNotFoundException } from "../exceptions/UserNotFoundException";
-import { WrongPasswordException } from "../exceptions/WrongPasswordException";
 import { User } from "../../framework/User";
 import { FindAndModifyWriteOpResultObject } from "@types/mongodb";
 import { LoginQuery } from "../../messages/auth/LoginQuery";
 import { AssignMessage } from "../../decorators/AssignMessage";
-
+import { Validator } from "validator.ts/Validator";
+import { ValidationErrorInterface } from "validator.ts/ValidationErrorInterface";
+import { Ex } from "../../shared/errors/errors";
+import { IQueryHandler } from "../../cqrs/IQueryHandler";
 
 @AssignMessage(LoginQuery)
 @injectable()
-export class LoginQueryHandler implements IMessageHandler
+export class LoginQueryHandler implements IQueryHandler
 {
     constructor(private _db: Database, private _auth: Auth) { }
 
     public async Handle(query: LoginQuery, context: Context): Promise<string>
     {
+      //  console.log("qqqqquery: "+JSON.stringify(query));
+
+    //    throw new HandlerException(Ex.WrongPassword);
+
+        
+        // let validator: Validator = new Validator();
+        // let errors: ValidationErrorInterface[] = validator.validate(query);
+
+        // if (errors) 
+        // {
+        //     let message = `Field "${ errors[0].errorName }" of value ${ errors[0].value } is wrong`;
+
+        //     // Throw only first error (not all) 
+        //     if (errors[0].errorName === 'email')
+        //     {
+            // try
+            // {
+           //     throw new HandlerException(Ex.InvalidUserEmail//, "PAYLOAD"
+           //    );void
+            // }
+            // catch (ex)
+            // {
+
+            // }
+        //     }
+        // }
+
         let usersCollection = await this._db.Open('users');
 
         let entry: FindAndModifyWriteOpResultObject = await usersCollection.findOneAndUpdate(
@@ -30,14 +58,14 @@ export class LoginQueryHandler implements IMessageHandler
 
         if ((entry.ok != 1) || (entry.value == null))
         {
-            throw new UserNotFoundException();
+            throw new HandlerException(Ex.UserNotExists);       
         }
 
         let userEntity: UserEntity = entry.value;
 
         if (userEntity.password != query.password)
         {
-            throw new WrongPasswordException();
+            throw new HandlerException(Ex.WrongPassword);
         }
 
         let user = new User();

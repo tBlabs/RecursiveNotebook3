@@ -9,23 +9,30 @@ import 'rxjs';
 @Injectable()
 export class CqrsBus
 {
-    private API: string = '';//https://localhost:3000/api/cqrsbus';
-
+    private API: string = 'api/cqrsbus';
 
     constructor(private _http: Http, private _storage: StorageService)
     {
-        this.API = 'api/cqrsbus';
-     }
+        if (!!process.env.PORT) // Heroku enviroment
+        {
+            this.API = 'api/cqrsbus';
+        }
+        else // Local/test enviroment
+        {
+            this.API = 'http://localhost:3000/api/cqrsbus';
+        }
+    }
 
 
-    public Send(message: ICommand | IQuery<any>): Observable<any>
+    public //async
+     Send(message: ICommand | IQuery<any>): Observable<any>
     {
         // Message class ---into---> { class_name: { class_fields }}
         const messagePackage = {};
         messagePackage[message.constructor.name] = message;
-        const json = JSON.stringify(messagePackage);
+        const messageAsJson = JSON.stringify(messagePackage);
 
-        console.log('Sending message:', json);
+        console.log('Sending message:', messageAsJson);
 
 
         const headers = new Headers(
@@ -35,9 +42,10 @@ export class CqrsBus
             });
         const options = new RequestOptions({ headers: headers });
 
+      //  let resp: Response = await this._http.post(this.API, messageAsJson, options).toPromise();
 
         return this._http
-            .post(this.API, json, options)
+            .post(this.API, messageAsJson, options)
             .map(response =>
             {
                 if (response.text() !== '')

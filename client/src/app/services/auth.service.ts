@@ -6,9 +6,9 @@ import { Injectable, OnInit } from '@angular/core';
 import { Subject } from "rxjs/Subject";
 import { BehaviorSubject } from "rxjs/BehaviorSubject";
 import { UserRegisterQuery, LoginQuery } from "app/services/cqrs/messages";
+import Validator from 'better-validator';
 
-
-export enum LoginStatus { LoggedIn, UserNotFound, WrongPassword, ConnectionProblem }
+export enum LoginStatus { LoggedIn, UserNotFound, WrongPassword, EmptyInput, ConnectionProblem }
 export enum RegisterStatus { Registered, EmailTaken, ConnectionProblem }
 
 
@@ -26,12 +26,19 @@ export class AuthService
 
     public IsLoggedIn(): boolean
     {
-        return (this._storage.GetSessionToken() != "");
+        return (this._storage.GetSessionToken() !== '');
     }
 
     public Login(email: string, pass: string): Observable<LoginStatus>
     {
         let ret = new Subject();
+       
+
+        if (email === '' || pass === '')
+        {
+            ret.next(LoginStatus.EmptyInput);
+            return ret;
+        }
 
         this._cqrs.Send(new LoginQuery({ email: email, password: pass })).subscribe((token: guid) =>
         {

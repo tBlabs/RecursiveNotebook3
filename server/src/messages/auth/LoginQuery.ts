@@ -1,5 +1,10 @@
+import { IsEmail, MinLength } from 'validator.ts/decorator/Validation';
+
 export class LoginQuery
 {
-    email: string;
-    password: string;
+    @IsEmail()
+    email: string = '';
+
+    @MinLength(3)
+    password: string = '';
 }

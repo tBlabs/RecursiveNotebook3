@@ -1,18 +1,17 @@
-import { UnathorizedException } from './../exceptions/UnathorizedException';
 import { injectable, Container, inject } from 'inversify';
 import 'reflect-metadata';
-import { IMessageHandler } from "../../cqrs/IQuery.interface";
 import { Context } from "../../framework/Context";
 import { NoteEntity } from "../../entities/NoteEntity";
 import { AssignMessage } from "../../decorators/AssignMessage";
 import { INotesRepo } from "../../repositories/INotesRepo";
 import { NotesRepo } from "../../repositories/NotesRepo";
 import { UpdateNoteCommand } from "../../messages/notes/UpdateNoteCommand";
+import { ICommandHandler } from "../../cqrs/ICommandHandler";
 
 
 @AssignMessage(UpdateNoteCommand)
 @injectable()
-export class UpdateNoteCommandHandler implements IMessageHandler
+export class UpdateNoteCommandHandler implements ICommandHandler
 {
     constructor(@inject("INotesRepo") private _notes: INotesRepo) { }
 
@@ -20,7 +19,7 @@ export class UpdateNoteCommandHandler implements IMessageHandler
     {
         if (!context.user.claims.canChangeNote)
         {
-            throw new UnathorizedException();
+           // throw new UnathorizedException();
         }
 
         let note: NoteEntity = new NoteEntity();

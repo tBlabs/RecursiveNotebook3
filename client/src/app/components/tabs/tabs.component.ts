@@ -35,11 +35,11 @@ export class DynamicTabsComponent
 
     constructor(private _tabsService: TabsService) { }
 
-    private Selected($event: Tab): void
+    private Selected(tab: Tab): void
     {
-        this.selectedTab = $event;
+        this.selectedTab = tab;
 
-        if ($event != null)
+        if (tab != null)
         {
             console.log("Selected tab: " + this.selectedTab.title + " (id=" + this.selectedTab.id + ")");
         }

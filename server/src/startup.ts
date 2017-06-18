@@ -2,8 +2,7 @@ import { Database } from './database/Database';
 import { Auth } from './services/auth';
 import { HandlerException } from './framework/HandlerException';
 import { Context } from './framework/Context';
-import { Cqrs } from "./cqrs/cqrs";
-import './handlers'; // This import is required because of necessity of call AssignMessage for every handler class
+import './handlers'; // This import is required here (in app entry point) because of necessity of call AssignMessage for every handler class
 import * as express from 'express';
 import * as cors from 'express-cors';
 import * as bodyParser from 'body-parser';
@@ -11,106 +10,239 @@ import * as path from 'path';
 import { container } from "./inversify.config";
 import { User } from "./framework/User";
 import { Claims } from "./framework/Claims";
+import { Validator } from "validator.ts/Validator";
+import { Contains, IsInt, IsLength, IsEmail, IsFQDN, IsDate } from "validator.ts/decorator/Validation";
+import { Cqrs } from "./cqrs/Cqrs";
+import { Ex } from "./shared/errors/errors";
+import { injectable } from 'inversify';
+import 'reflect-metadata';
+import { OK } from 'http-status-codes';
+import { CqrsException } from "./cqrs/CqrsException";
+
+export class Post
+{
+    @IsLength(10, 20)
+    title: string = '';
+
+    @Contains('hello')
+    text: string = '';
+
+    @IsInt({ min: 0, max: 1000 })
+    rating: number = 0;
+
+    @IsEmail()
+    email: string = '';
+
+    @IsFQDN()
+    site: string = '';
+
+
+    //  @IsDate()
+    //  createDate: Date = new Date();
+
+}
+
+
+@injectable()
+class Handler
+{
+    public async Handle(): Promise<string>
+    {
+        //  var waitTill = new Date(new Date().getTime() + 1 * 1000);    while (waitTill > new Date()) { }
+        throw new HandlerException(Ex.WrongPassword);
+        return "asdf";
+    }
+}
+
+container.bind<Handler>(Handler).toSelf();
+
+class Cq
+{
+    public static async Execute(): Promise<any>
+    {
+        try
+        {
+            //let hand = concontainer.get(this.messageHandlers[messageName]) as IMessageHandler;
+            let hand: any = container.get(Handler);
+
+            await hand.Handle();
+            //return await Handler.Handle();
+        }
+        catch (ex)
+        {
+            throw ex;
+        }
+    }
+}
 
 class Startup
 {
+    public static async Route()
+    {
+        try
+        {
+            let y = await Cq.Execute();
+            //  let y = await X();
+            console.log("xxxxxxxxxxxxXyyyyyyX: ", y);
+        }
+        catch (ex)
+        {
+            console.log("exxxxxxxx: ", ex);
+
+        }
+    }
+
+    public static async HandleCqrsBus(req, res)
+    {
+        // TODO: Why this is not working?!?!?!
+        // res.header('Access-Control-Allow-Origin', '*');
+        // res.header('Access-Control-Allow-Methods', 'POST');
+        // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+        let context: Context = new Context();
+
+        if (req)
+        {
+            let authorizationHeader = req.headers['authorization'];
+
+            if (authorizationHeader)
+            {
+                let authService = container.resolve(Auth);
+                let user = authService.ExtractUserFromToken(authorizationHeader);
+
+                context.user = user;
+            }
+        }
+
+        try
+        {
+            // let m: string = '{ "LoginQuery": { "email": "tB", "password": "pass" } }';
+            // let result = await Cqrs.Execute(JSON.parse(m), context);
+            // console.log('Handler result:', result);
+
+            if (req)
+            {
+
+                let result = await Cqrs.Execute(req.body, context);
+
+                console.log('Handler result:', result);
+
+                  if (res) res.status(OK).send(result);
+            }
+        }
+        catch (ex)
+        {
+
+            if (ex instanceof HandlerException)
+            {
+                console.log("Handler exception:", ex);
+
+                if (ex.exception !== undefined)
+                {
+                    //    console.log(JSON.stringify(ex));
+                   // console.log("RES: ",res);
+
+                   if (res) res.status(ex.exception.httpStatus).send(ex.exception);
+                   //  res.status(201).send("END");
+                }
+
+            }
+            else
+            if (ex instanceof CqrsException)
+            {
+                console.log("CQRS Engine exception:", ex);
+                
+                if (res) res.status(500).send((ex as CqrsException).message);
+            }
+            else
+            {
+                console.log("Undefined exception");
+                 if (res) res.status(500).send("Undefined exception");
+            }
+
+        }
+    }
+
+
     public static async Start(): Promise<void>
     {
         console.log("*** START ***");
+        if (0)
+        {
+            // this.Route();
+            Cqrs.PrintMessagesHandlers();
+            await this.HandleCqrsBus(null, null);
+        }
 
-        Cqrs.PrintMessagesHandlers();
 
-       if (1)
+        if (0)
+        {
+            try
+            {
+                let post = new Post();
+                post.title = 'Hello there man!'; // should not pass 
+                post.text = 'hello'; // should not pass 
+                post.rating = 121; // should not pass 
+                post.email = 'g@goo gle.com'; // should not pass 
+                post.site = 'www.wp.pl'; // should not pass 
+                //     let date = new Date();
+                //    console.log(date.getUTCDate());
+                //     post.createDate = date;
+
+                let validator = new Validator();
+                let errors = validator.validateOrThrow(post);
+                if (errors)
+                    console.log(errors);
+            }
+            catch (ex)
+            {
+                console.log('ex: ', ex);
+
+            }
+            console.log("---------------------");
+        }
+
+        //      Cqrs.PrintMessagesHandlers();
+        // if (0)
         {
             let host = express();
 
             host.use(bodyParser.json());
             host.use(cors());
-          //  host.use(express.static('static'));
-          //ls  console.log("public dir: "+__dirname);
-          
-         //   host.use('/public', express.static('/home/tb/Projects/RecursiveNotebook3/server/src/public'));
-          //  host.use('/public', express.static(__dirname+'/../src/public'));
-       //     host.use('/public', express.static(__dirname+'/../src/public'));
-            host.use(express.static(__dirname+'/../../client/dist'));
+            //  host.use(express.static('static'));
+            //ls  console.log("public dir: "+__dirname);
 
-            host.get('/test', (req, res) =>
+            //   host.use('/public', express.static('/home/tb/Projects/RecursiveNotebook3/server/src/public'));
+            //  host.use('/public', express.static(__dirname+'/../src/public'));
+            //     host.use('/public', express.static(__dirname+'/../src/public'));
+            host.use(express.static(__dirname + '/../../client/dist'));
+
+            host.get('/test', async (req, res) =>
             {
                 console.log("/test GET hit!");
-                
+
+                try
+                {
+                    let y = await Cq.Execute();
+                    console.log("aaaaaaaaa: ", y);
+                }
+                catch (ex)
+                {
+                    console.log("bbbbbbbbb: ", ex);
+
+                }
+
+
                 res.status(200).end("This is respond for /test hit.");
             });
 
-            host.post('/api/cqrsbus', async (req, res) =>
-            {        
-                // TODO: Why this is not working?!?!?!
-                // res.header('Access-Control-Allow-Origin', '*');
-                // res.header('Access-Control-Allow-Methods', 'POST');
-                // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
-                let context: Context = new Context();
-                let authorizationHeader = req.headers['authorization'];
-
-                if (authorizationHeader)
-                {
-                    let authService = container.resolve(Auth);
-                    let user = authService.ExtractUserFromToken(authorizationHeader);
-
-                    context.user = user;
-                }
-
-                try
-                {            
-                    let result = await Cqrs.Execute(req.body, context);
-
-                    console.log("Handle result:", result);
-
-                    res.status(200).end(JSON.stringify(result));
-                }
-                catch (error)
-                {
-                    console.log("Handle exception:", error);
-
-                    if (error instanceof HandlerException)
-                    {
-                        if (error.statusCode)
-                        {
-                            res.status(error.statusCode).end(error.message);
-                        }
-                    }
-                }
+            host.post('/api/cqrsbus', (req, res) =>
+            {
+                this.HandleCqrsBus(req, res);
             });
 
             let port = process.env.PORT || 3000;
-            host.listen(port, () => console.log('SERVER STARTED @'+port));
-        }
-        else
-        {                   
-            console.log("*** TEST MODE ***");
-                   
-            //let packageAsString = '{ "UserRegisterQuery": { "email": "u3", "password": "pass" } }';
-            // let packageAsString = '{ "LoginQuery": { "email": "tB", "password": "pass" } }';
-            // let packageAsString = '{ "AddNoteCommand": { "id": "12345678-1234-1234-1234-123456789012", "parentId": "00000002-0000-0000-0000-000000000000", "title": "note title", "content": "tab content" } }';
-              let packageAsString = '{ "UpdateNoteCommand": { "id": "8574c9e6-a4b9-4b4a-3165-1d2f21061df9", "parentId": "ad39954b-3ea9-2c68-244d-a58ae1eee927", "title": "new title", "content": "new content" } }';
-            //   let packageAsString = '{ "GetNotesQuery": { "parentId": "00000001-0000-0000-0000-000000000000" } }';
-
-
-            let context: Context = new Context();
-            context.user.id = "575af61d-6ff2-40b2-8afa-b295d2a4e489";
-            context.user.claims.canReadNote = true;
-            context.user.claims.canAddNote = true;
-            context.user.claims.canChangeNote = true;
-
-            try
-            {
-                let messagePackage = JSON.parse(packageAsString);
-                let result = await Cqrs.Execute(messagePackage, context);
-                console.log(result);
-            }
-            catch (error)
-            {
-                console.log(error);
-            }         
+            host.listen(port, () => console.log('SERVER STARTED @' + port));
         }
     }
 }
@@ -127,7 +259,7 @@ Startup.Start();
 // app.get('/', function (request, response)
 // {
 //     console.log("HIT!!!");
-    
+
 //     response.send("hello there!");
 // });
 

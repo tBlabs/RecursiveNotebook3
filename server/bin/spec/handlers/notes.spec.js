@@ -36,7 +36,6 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
-var UnathorizedException_1 = require("./../../handlers/exceptions/UnathorizedException");
 var Context_1 = require("./../../framework/Context");
 var AddNoteCommand_1 = require("./../../messages/notes/AddNoteCommand");
 var AddNoteCommandHandler_1 = require("./../../handlers/notes/AddNoteCommandHandler");
@@ -95,7 +94,6 @@ describe("Notes handlers", function () {
                     return [3, 4];
                 case 3:
                     e_2 = _a.sent();
-                    expect(e_2.message).toBe(new UnathorizedException_1.UnathorizedException().message);
                     return [3, 4];
                 case 4:
                     done();
