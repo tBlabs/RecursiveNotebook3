@@ -1,13 +1,4 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -49,116 +40,18 @@ var HandlerException_1 = require("./framework/HandlerException");
 var Context_1 = require("./framework/Context");
 require("./handlers");
 var express = require("express");
-var cors = require("express-cors");
 var bodyParser = require("body-parser");
 var inversify_config_1 = require("./inversify.config");
-var Validator_1 = require("validator.ts/Validator");
-var Validation_1 = require("validator.ts/decorator/Validation");
 var Cqrs_1 = require("./cqrs/Cqrs");
-var errors_1 = require("./shared/errors/errors");
-var inversify_1 = require("inversify");
 require("reflect-metadata");
 var http_status_codes_1 = require("http-status-codes");
 var CqrsException_1 = require("./cqrs/CqrsException");
-var Post = (function () {
-    function Post() {
-        this.title = '';
-        this.text = '';
-        this.rating = 0;
-        this.email = '';
-        this.site = '';
-    }
-    return Post;
-}());
-__decorate([
-    Validation_1.IsLength(10, 20),
-    __metadata("design:type", String)
-], Post.prototype, "title", void 0);
-__decorate([
-    Validation_1.Contains('hello'),
-    __metadata("design:type", String)
-], Post.prototype, "text", void 0);
-__decorate([
-    Validation_1.IsInt({ min: 0, max: 1000 }),
-    __metadata("design:type", Number)
-], Post.prototype, "rating", void 0);
-__decorate([
-    Validation_1.IsEmail(),
-    __metadata("design:type", String)
-], Post.prototype, "email", void 0);
-__decorate([
-    Validation_1.IsFQDN(),
-    __metadata("design:type", String)
-], Post.prototype, "site", void 0);
-exports.Post = Post;
-var Handler = (function () {
-    function Handler() {
-    }
-    Handler.prototype.Handle = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                throw new HandlerException_1.HandlerException(errors_1.Ex.WrongPassword);
-            });
-        });
-    };
-    return Handler;
-}());
-Handler = __decorate([
-    inversify_1.injectable()
-], Handler);
-inversify_config_1.container.bind(Handler).toSelf();
-var Cq = (function () {
-    function Cq() {
-    }
-    Cq.Execute = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var hand, ex_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        hand = inversify_config_1.container.get(Handler);
-                        return [4, hand.Handle()];
-                    case 1:
-                        _a.sent();
-                        return [3, 3];
-                    case 2:
-                        ex_1 = _a.sent();
-                        throw ex_1;
-                    case 3: return [2];
-                }
-            });
-        });
-    };
-    return Cq;
-}());
 var Startup = (function () {
     function Startup() {
     }
-    Startup.Route = function () {
-        return __awaiter(this, void 0, void 0, function () {
-            var y, ex_2;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        return [4, Cq.Execute()];
-                    case 1:
-                        y = _a.sent();
-                        console.log("xxxxxxxxxxxxXyyyyyyX: ", y);
-                        return [3, 3];
-                    case 2:
-                        ex_2 = _a.sent();
-                        console.log("exxxxxxxx: ", ex_2);
-                        return [3, 3];
-                    case 3: return [2];
-                }
-            });
-        });
-    };
     Startup.HandleCqrsBus = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var context, authorizationHeader, authService, user, result, ex_3;
+            var context, authorizationHeader, authService, user, result, ex_1, serializedException;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -184,18 +77,19 @@ var Startup = (function () {
                         _a.label = 3;
                     case 3: return [3, 5];
                     case 4:
-                        ex_3 = _a.sent();
-                        if (ex_3 instanceof HandlerException_1.HandlerException) {
-                            console.log("Handler exception:", ex_3);
-                            if (ex_3.exception !== undefined) {
+                        ex_1 = _a.sent();
+                        if (ex_1 instanceof HandlerException_1.HandlerException) {
+                            console.log("Handler exception:", ex_1);
+                            if (ex_1.exception !== undefined) {
+                                serializedException = JSON.stringify(ex_1.exception);
                                 if (res)
-                                    res.status(ex_3.exception.httpStatus).send(ex_3.exception);
+                                    res.status(ex_1.exception.httpStatus).send(serializedException);
                             }
                         }
-                        else if (ex_3 instanceof CqrsException_1.CqrsException) {
-                            console.log("CQRS Engine exception:", ex_3);
+                        else if (ex_1 instanceof CqrsException_1.CqrsException) {
+                            console.log("CQRS Engine exception:", ex_1);
                             if (res)
-                                res.status(500).send(ex_3.message);
+                                res.status(500).send(ex_1.message);
                         }
                         else {
                             console.log("Undefined exception");
@@ -211,7 +105,7 @@ var Startup = (function () {
     Startup.Start = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
-            var post, validator, errors, host, port_1;
+            var host, port_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -225,16 +119,6 @@ var Startup = (function () {
                     case 2:
                         if (0) {
                             try {
-                                post = new Post();
-                                post.title = 'Hello there man!';
-                                post.text = 'hello';
-                                post.rating = 121;
-                                post.email = 'g@goo gle.com';
-                                post.site = 'www.wp.pl';
-                                validator = new Validator_1.Validator();
-                                errors = validator.validateOrThrow(post);
-                                if (errors)
-                                    console.log(errors);
                             }
                             catch (ex) {
                                 console.log('ex: ', ex);
@@ -244,30 +128,23 @@ var Startup = (function () {
                         {
                             host = express();
                             host.use(bodyParser.json());
-                            host.use(cors());
+                            host.all('/*', function (req, res, next) {
+                                res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+                                res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+                                res.header("Access-Control-Allow-Methods", "POST");
+                                next();
+                            });
                             host.use(express.static(__dirname + '/../../client/dist'));
                             host.get('/test', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                                var y, ex_4;
                                 return __generator(this, function (_a) {
-                                    switch (_a.label) {
-                                        case 0:
-                                            console.log("/test GET hit!");
-                                            _a.label = 1;
-                                        case 1:
-                                            _a.trys.push([1, 3, , 4]);
-                                            return [4, Cq.Execute()];
-                                        case 2:
-                                            y = _a.sent();
-                                            console.log("aaaaaaaaa: ", y);
-                                            return [3, 4];
-                                        case 3:
-                                            ex_4 = _a.sent();
-                                            console.log("bbbbbbbbb: ", ex_4);
-                                            return [3, 4];
-                                        case 4:
-                                            res.status(200).end("This is respond for /test hit.");
-                                            return [2];
+                                    console.log("/test GET hit!");
+                                    try {
                                     }
+                                    catch (ex) {
+                                        console.log("bbbbbbbbb: ", ex);
+                                    }
+                                    res.status(200).end("This is respond for /test hit.");
+                                    return [2];
                                 });
                             }); });
                             host.post('/api/cqrsbus', function (req, res) {

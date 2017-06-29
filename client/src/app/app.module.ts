@@ -1,3 +1,4 @@
+import { ErrorService } from './services/ErrorService';
 import { MdSnackBar, MaterialModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsModule } from './tabs.module';
@@ -10,15 +11,13 @@ import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
 import { AppComponent } from './app.component';
 import { AuthService } from './services/auth.service';
-import { TestSnackComponent } from "./components/snackbar/snack.component";
 
 
 @NgModule({
   declarations: 
   [
     AppComponent,
-    AuthComponent,
-    TestSnackComponent
+    AuthComponent
   ],
   imports: 
   [
@@ -34,7 +33,8 @@ import { TestSnackComponent } from "./components/snackbar/snack.component";
     CqrsBus,
     StorageService,
     AuthService,
-    MdSnackBar
+    MdSnackBar,
+    ErrorService
   ],
   bootstrap:
   [

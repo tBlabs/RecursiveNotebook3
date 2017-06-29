@@ -31,8 +31,17 @@ var ServerException = (function () {
 exports.ServerException = ServerException;
 exports.SERVER_EXCEPTIONS = [
     { code: Ex.NoError, type: ExType.Success, message: "No error", httpStatus: http_status_codes_1.OK },
+    { code: Ex.CqrsException, type: ExType.Error, message: "CQRS Bus Error", httpStatus: 500 },
     { code: Ex.Unauthorized, type: ExType.Warning, message: "Unauthorized", httpStatus: http_status_codes_1.UNAUTHORIZED },
-    { code: Ex.WrongPassword, type: ExType.Warning, message: "Wrong password", httpStatus: http_status_codes_1.UNAUTHORIZED },
-    { code: Ex.InvalidUserEmail, type: ExType.Warning, message: "Invalid user email", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.WrongPassword, type: ExType.Warning, message: "WrongPassword", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.EmailTaken, type: ExType.Warning, message: "EmailTaken", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.UserNotExists, type: ExType.Warning, message: "UserNotExists", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.NoPermissionToCreateNote, type: ExType.Warning, message: "NoPermissionToCreateNote", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.NoPermissionToReadNote, type: ExType.Warning, message: "NoPermissionToReadNote", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.NoPermissionToUpdateNote, type: ExType.Warning, message: "NoPermissionToUpdateNote", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.NoPermissionToDeleteNote, type: ExType.Warning, message: "NoPermissionToDeleteNote", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.InvalidUserEmail, type: ExType.Warning, message: "InvalidUserEmail", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.InvalidUserPassword, type: ExType.Warning, message: "InvalidUserPassword", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: Ex.InvalidNoteTitle, type: ExType.Warning, message: "InvalidNoteTitle", httpStatus: http_status_codes_1.UNAUTHORIZED }
 ];
 //# sourceMappingURL=errors.js.map

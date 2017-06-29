@@ -19,79 +19,9 @@ import 'reflect-metadata';
 import { OK } from 'http-status-codes';
 import { CqrsException } from "./cqrs/CqrsException";
 
-export class Post
-{
-    @IsLength(10, 20)
-    title: string = '';
-
-    @Contains('hello')
-    text: string = '';
-
-    @IsInt({ min: 0, max: 1000 })
-    rating: number = 0;
-
-    @IsEmail()
-    email: string = '';
-
-    @IsFQDN()
-    site: string = '';
-
-
-    //  @IsDate()
-    //  createDate: Date = new Date();
-
-}
-
-
-@injectable()
-class Handler
-{
-    public async Handle(): Promise<string>
-    {
-        //  var waitTill = new Date(new Date().getTime() + 1 * 1000);    while (waitTill > new Date()) { }
-        throw new HandlerException(Ex.WrongPassword);
-        return "asdf";
-    }
-}
-
-container.bind<Handler>(Handler).toSelf();
-
-class Cq
-{
-    public static async Execute(): Promise<any>
-    {
-        try
-        {
-            //let hand = concontainer.get(this.messageHandlers[messageName]) as IMessageHandler;
-            let hand: any = container.get(Handler);
-
-            await hand.Handle();
-            //return await Handler.Handle();
-        }
-        catch (ex)
-        {
-            throw ex;
-        }
-    }
-}
 
 class Startup
 {
-    public static async Route()
-    {
-        try
-        {
-            let y = await Cq.Execute();
-            //  let y = await X();
-            console.log("xxxxxxxxxxxxXyyyyyyX: ", y);
-        }
-        catch (ex)
-        {
-            console.log("exxxxxxxx: ", ex);
-
-        }
-    }
-
     public static async HandleCqrsBus(req, res)
     {
         // TODO: Why this is not working?!?!?!
@@ -132,7 +62,6 @@ class Startup
         }
         catch (ex)
         {
-
             if (ex instanceof HandlerException)
             {
                 console.log("Handler exception:", ex);
@@ -141,8 +70,9 @@ class Startup
                 {
                     //    console.log(JSON.stringify(ex));
                    // console.log("RES: ",res);
+                    let serializedException: string = JSON.stringify(ex.exception);
 
-                   if (res) res.status(ex.exception.httpStatus).send(ex.exception);
+                   if (res) res.status(ex.exception.httpStatus).send(serializedException);
                    //  res.status(201).send("END");
                 }
 
@@ -179,20 +109,20 @@ class Startup
         {
             try
             {
-                let post = new Post();
-                post.title = 'Hello there man!'; // should not pass 
-                post.text = 'hello'; // should not pass 
-                post.rating = 121; // should not pass 
-                post.email = 'g@goo gle.com'; // should not pass 
-                post.site = 'www.wp.pl'; // should not pass 
+                // let post = new Post();
+                // post.title = 'Hello there man!'; // should not pass 
+                // post.text = 'hello'; // should not pass 
+                // post.rating = 121; // should not pass 
+                // post.email = 'g@goo gle.com'; // should not pass 
+                // post.site = 'www.wp.pl'; // should not pass 
                 //     let date = new Date();
                 //    console.log(date.getUTCDate());
                 //     post.createDate = date;
 
-                let validator = new Validator();
-                let errors = validator.validateOrThrow(post);
-                if (errors)
-                    console.log(errors);
+                // let validator = new Validator();
+                // let errors = validator.validateOrThrow(post);
+                // if (errors)
+                //     console.log(errors);
             }
             catch (ex)
             {
@@ -208,7 +138,14 @@ class Startup
             let host = express();
 
             host.use(bodyParser.json());
-            host.use(cors());
+           // host.use(cors());
+            host.all('/*', function (req, res, next)
+            {
+                res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+                res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");   
+                res.header("Access-Control-Allow-Methods", "POST");
+                next(); 
+            });
             //  host.use(express.static('static'));
             //ls  console.log("public dir: "+__dirname);
 
@@ -223,8 +160,8 @@ class Startup
 
                 try
                 {
-                    let y = await Cq.Execute();
-                    console.log("aaaaaaaaa: ", y);
+                    // let y = await Cq.Execute();
+                    // console.log("aaaaaaaaa: ", y);
                 }
                 catch (ex)
                 {

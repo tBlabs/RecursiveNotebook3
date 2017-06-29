@@ -48,7 +48,7 @@ enum AuthFormViewState
 
     </div>
     `,
-  styles: 
+  styles:
   [`
     .little-margin-top { margin-top: 12px }
     .hide { display: none } 
@@ -66,13 +66,13 @@ export class AuthComponent
 
   constructor(private _auth: AuthService)
   {
-    this._auth.LoginStatusChanged.subscribe((loginStatus: boolean) =>
-    {
-      if (loginStatus)
-        this.SetFormState(AuthFormViewState.LogedIn);
-      else
-        this.SetFormState(AuthFormViewState.Initial);
-    });
+    // this._auth.LoginStatusChanged.subscribe((loginStatus: boolean) =>
+    // {
+    //   if (loginStatus)
+    //     this.SetFormState(AuthFormViewState.LogedIn);
+    //   else
+    //     this.SetFormState(AuthFormViewState.Initial);
+    // });
   }
 
   private SetFormState(state: AuthFormViewState)
@@ -115,42 +115,40 @@ export class AuthComponent
   }
 
 
-  private Login(email: string, pass: string): void
+  private async Login(email: string, pass: string): Promise<void>
   {
     this.SetFormState(AuthFormViewState.Logging);
 
-    this._auth.Login(email, pass).subscribe((status: LoginStatus) =>
+    let status: LoginStatus = await this._auth.Login(email, pass);
+
+    switch (status)
     {
-      switch (status)
-      {
-        case LoginStatus.LoggedIn: this.SetFormState(AuthFormViewState.LogedIn);
-          break;
-        case LoginStatus.UserNotFound: this.SetFormState(AuthFormViewState.UserNotFound);
-          break;
-        case LoginStatus.WrongPassword: this.SetFormState(AuthFormViewState.WrongPassword);
-          break;
-        default: this.SetFormState(AuthFormViewState.Initial);
-          break;
-      }
-    });
+      case LoginStatus.LoggedIn: this.SetFormState(AuthFormViewState.LogedIn);
+        break;
+      case LoginStatus.UserNotFound: this.SetFormState(AuthFormViewState.UserNotFound);
+        break;
+      case LoginStatus.WrongPassword: this.SetFormState(AuthFormViewState.WrongPassword);
+        break;
+      default: this.SetFormState(AuthFormViewState.Initial);
+        break;
+    }
   }
 
-  private Register(email: string, pass: string): void
+  private async Register(email: string, pass: string): Promise<void>
   {
     this.SetFormState(AuthFormViewState.Registering);
 
-    this._auth.Register(email, pass).subscribe((status: RegisterStatus) =>
+    let status: RegisterStatus = await this._auth.Register(email, pass);
+
+    switch (status)
     {
-      switch (status)
-      {
-        case RegisterStatus.Registered: this.SetFormState(AuthFormViewState.LogedIn);
-          break;
-        case RegisterStatus.EmailTaken: this.SetFormState(AuthFormViewState.EmailTaken);
-          break;
-        default: this.SetFormState(AuthFormViewState.Initial);
-          break;
-      }
-    });
+      case RegisterStatus.Registered: this.SetFormState(AuthFormViewState.LogedIn);
+        break;
+      case RegisterStatus.EmailTaken: this.SetFormState(AuthFormViewState.EmailTaken);
+        break;
+      default: this.SetFormState(AuthFormViewState.Initial);
+        break;
+    }
   }
 
   private Logout()

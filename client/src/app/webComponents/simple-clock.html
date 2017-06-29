@@ -40,14 +40,14 @@
         constructor(args)
         {
             super();
-            console.log("my clock!");
+            console.log("SimpleClock created");
             this.shadow = this.attachShadow({ mode: 'open' });
         }
 
-    
+
         onClick(e)
-        {       
-            console.log("clicked!!!");
+        {
+            console.log("SimpleClock clicked!");
             this.dispatchEvent(new CustomEvent('clicked',
                 {
                     detail: { foo: "bar" },
@@ -71,7 +71,7 @@
 
         connectedCallback()
         {
-            console.log("connected");
+            console.log("SimpleClock connected");
 
             this.CacheDOM();
 

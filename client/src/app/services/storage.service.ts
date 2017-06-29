@@ -5,12 +5,12 @@ import { Injectable } from '@angular/core';
 export class StorageService
 {
     private SESSION_TOKEN_NAME = "session_token";
-   
+
     constructor()
     {
-        if (typeof(Storage) === "undefined")
+        if (typeof (Storage) === "undefined")
         {
-            console.log("STORAGE IS UNAVALIABLE!");         
+            console.log("STORAGE IS UNAVALIABLE!");
         }
     }
 
@@ -18,9 +18,17 @@ export class StorageService
     {
         localStorage.setItem(this.SESSION_TOKEN_NAME, token);
     }
-
-    public GetSessionToken(): guid
+    public ClearSessionToken(): void
     {
-        return localStorage.getItem(this.SESSION_TOKEN_NAME);
+        localStorage.setItem(this.SESSION_TOKEN_NAME, '');
+    }
+
+    public GetSessionToken(): guid | null
+    {
+        let token: string = localStorage.getItem(this.SESSION_TOKEN_NAME);
+  
+        if (token === '') token = null;
+
+        return token;
     }
 }

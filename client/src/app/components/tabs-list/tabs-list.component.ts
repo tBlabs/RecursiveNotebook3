@@ -114,76 +114,69 @@ export class TabsListComponent implements OnInit, OnChanges
         }
     }
 
-    private LoadTabs(parentTab: Tab): void
+    private async LoadTabs(parentTab: Tab): Promise<void>
     {
         this.isLoading = true;
         this.tabs = [];
 
         let parentId = parentTab != null ? parentTab.id : EmptyGuid;
+        try
+        {
+            let tabs: Tab[] = await this.tabsService.GetChildren(parentId);
 
-        this.tabsService.GetChildren(parentId)
-            .finally(() =>
-            {
-                this.isLoading = false;
-            })
-            .subscribe((tabs: Tab[]) => 
-            {
-                if (TabsListComponent.movingTab != null)
-                    this.tabs = tabs.filter(t => t.id != TabsListComponent.movingTab.id); // Show all but not cutted one
-                else
-                    this.tabs = tabs;
+            this.isLoading = false;
 
-                // Auto open first tab in first line of tabs (with parentId=0)
-                if (this.tabs[0] != null && this.tabs[0].parentId == EmptyGuid)
-                {
-                    this.Select(this.tabs[0]);
-                }
-            },
-            (err) =>
+            if (TabsListComponent.movingTab != null)
+                this.tabs = tabs.filter(t => t.id != TabsListComponent.movingTab.id); // Show all but not cutted one
+            else
+                this.tabs = tabs;
+
+            // Auto open first tab in first line of tabs (with parentId=0)
+            if (this.tabs[0] != null && this.tabs[0].parentId == EmptyGuid)
             {
-                alert("Can not get children! Error: " + err);
-            });
+                this.Select(this.tabs[0]);
+            }
+        }
+        catch (ex)
+        {
+            alert("Can not get children! Error: " + ex);
+        }
     }
 
-    private AddSibiling(title: string): void
+    private async AddSibiling(title: string): Promise<void>
     {
         if (title != "")
         {
             let parentId = this.parentTab != null ? this.parentTab.id : EmptyGuid;
 
-            this.tabsService.AddSibling(parentId, title).subscribe((newTab) =>
+            try
             {
+                let newTab: Tab = await this.tabsService.AddSibling(parentId, title);
+
                 this.tabs.push(newTab);
                 this.Select(newTab);
-            },
-                (err) =>
-                {
-                    alert("Can not add new tab! Error: " + err);
-                });
+            }
+            catch (ex)
+            {
+                alert("Can not add new tab! Error: " + ex);
+            }
         }
     }
 
-    private UpdateTab(tab: Tab)
-    {     
-        return new Promise((resolve, reject) =>
+    private async UpdateTab(tab: Tab)
+    {
+        console.log("SelectedTab:", tab);
+
+        try
         {
-            console.log("SelectedTab:", tab);
-
-            this.tabsService.Update(tab).subscribe(() => 
-            {
-                // nothing to do
-                resolve();
-            },
-                (err) =>
-                {
-                    if (err == 401) alert("You have no permision to edit notes!");
-                    else
-                        alert("Can not edit tab! Error: " + err);
-
-                    reject(err);
-                });
-        });
-
+            await this.tabsService.Update(tab);
+        }
+        catch (ex)
+        {
+            if (ex == 401) alert("You have no permision to edit notes!"); // TODO err code not ex!!!
+            else
+                alert("Can not edit tab! Error: " + ex);
+        }
     }
 
     private RemoveTab(tab: Tab): void
@@ -192,20 +185,22 @@ export class TabsListComponent implements OnInit, OnChanges
         this.SelectContentTab();
     }
 
-    private Delete(tab: Tab): void
+    private async Delete(tab: Tab): Promise<void>
     {
         if (confirm(`Delete "${ tab.title }"?`))
         {
-            this.tabsService.Delete(tab.id).subscribe(() =>
+            try
             {
+                await this.tabsService.Delete(tab.id);
+
                 this.RemoveTab(tab);
-            },
-                (err) =>
-                {
-                    if (err == 401) alert("You have no permision to delete notes!");
-                    else
-                        alert("Can not delete tab! Error: " + err);
-                });
+            }
+            catch (ex)
+            {
+                if (ex == 401) alert("You have no permision to delete notes!");
+                else
+                    alert("Can not delete tab! Error: " + ex);
+            }
         }
     }
 
@@ -228,7 +223,7 @@ export class TabsListComponent implements OnInit, OnChanges
     {
         TabsListComponent.movingTab = $event.item;
 
-        console.log(`Cutting ${TabsListComponent.movingTab.title}`);
+        console.log(`Cutting ${ TabsListComponent.movingTab.title }`);
 
         this.RemoveTab(TabsListComponent.movingTab);
     }
@@ -240,17 +235,17 @@ export class TabsListComponent implements OnInit, OnChanges
             let contextMenuTab: Tab = $event.item;
 
             console.log(`Pasting "${ TabsListComponent.movingTab.title }" as child of "${ contextMenuTab.title }"...`);
- 
+
             TabsListComponent.movingTab.parentId = contextMenuTab.parentId;
 
-            this.UpdateTab(TabsListComponent.movingTab).then(()=>
+            this.UpdateTab(TabsListComponent.movingTab).then(() =>
             {
                 this.Select(contextMenuTab);
                 this.tabs.push(TabsListComponent.movingTab);
                 this.Select(TabsListComponent.movingTab);
-                
+
                 TabsListComponent.movingTab = null;
-            });          
+            });
         }
     }
 }

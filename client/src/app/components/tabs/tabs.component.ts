@@ -45,24 +45,21 @@ export class DynamicTabsComponent
         }
     }
 
-    private Save(): void
+    private async Save(): Promise<void>
     {
         this.buttonText = "Saving...";
-        
+
         this.selectedTab.content = this.content;
 
-        this._tabsService.Update(this.selectedTab)
-            .finally(() =>
-            {
-                this.buttonText = "Save";
-            })
-            .subscribe(() =>
-            {
-                // nothing to do
-            },
-            (err) => 
-            {
-                alert('Unable to save. Error ' + err);
-            });
+        try
+        {
+            await this._tabsService.Update(this.selectedTab);
+
+            this.buttonText = "Save";
+        }
+        catch (ex)
+        {
+            alert('Unable to save. Error ' + ex);
+        }
     }
 }

@@ -2,7 +2,6 @@ import { MdSnackBar } from '@angular/material';
 import { AuthComponent } from './components/auth/auth.component';
 import { AuthService, LoginStatus } from './services/auth.service';
 import { Component } from '@angular/core';
-import { TestSnackComponent } from "app/components/snackbar/snack.component";
 
 @Component({
   selector: 'app-root',
@@ -20,47 +19,42 @@ import { TestSnackComponent } from "app/components/snackbar/snack.component";
       Snack test!
     </button>
 
-    <simple-clock theme="gray" (clicked)="XXX($event)"></simple-clock>
+    <simple-clock theme="gray" (clicked)="OnClockClick($event)"></simple-clock>
 
     `,
   styleUrls: ['app.component.css']
 })
 export class AppComponent
 {
+  showTabs: boolean;
 
-  openSnackBar()
-  {
-    // this.snackBar.openFromComponent(TestSnackComponent, {
-    //   duration: 1200,
-    // });
-    this.snackBar.open("yo!", "", { duration: 1000 });
-  }
-
-  XXX(event)
-  {
-    console.log(event.detail.foo);
-    this.snackBar.open("Clock clicked!", "", { duration: 1000 });
-
-  }
-
-  showTabs: boolean = false;
-
-  constructor(private _auth: AuthService, public snackBar: MdSnackBar
+  constructor(private _auth: AuthService, public _snackBar: MdSnackBar
   )
   {
     this.showTabs = _auth.IsLoggedIn();
 
-    _auth.LoginStatusChanged.subscribe(x => this.showTabs = x);
+    //_auth.LoginStatusChanged.subscribe(x => this.showTabs = x);
+  }
+
+  openSnackBar()
+  {
+    this._snackBar.open("yo!", "", { duration: 1000 });
+  }
+
+  OnClockClick(event)
+  {
+    console.log('Clock clicked, event args: ', event.detail.foo);
+    this._snackBar.open("This Clock is a Web Component :)", "", { duration: 3000 });
   }
 
   Demo()
   {
-    this._auth.Login("demo", "demo").subscribe((s: LoginStatus) =>
-    {
-      if (s == LoginStatus.UserNotFound) 
-      {
-        alert("No demo user in database");
-      }
-    });
+    // this._auth.Login("demo", "demo").subscribe((s: LoginStatus) =>
+    // {
+    //   if (s == LoginStatus.UserNotFound) 
+    //   {
+    //     alert("No demo user in database");
+    //   }
+    // });
   }
 }

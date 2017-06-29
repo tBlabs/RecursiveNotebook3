@@ -14,7 +14,9 @@ export class HandlerException
     )
     {
         this.exception = SERVER_EXCEPTIONS.find(x => x.code === exCode);
-     //   console.log("EEEEEEEEEEEE: "+JSON.stringify(this.exception));
+
+        if (this.exception === undefined)
+             console.log("EEEEEEEEEEEE: "+JSON.stringify(this.exception));
         
     
         // this.message = msg;

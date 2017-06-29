@@ -15,95 +15,75 @@ export enum RegisterStatus { Registered, EmailTaken, ConnectionProblem }
 @Injectable()
 export class AuthService
 {
-    public LoginStatusChanged = new BehaviorSubject<boolean>(false);
-
     constructor(private _cqrs: CqrsBus, private _storage: StorageService)
     {
-        console.log("User is " + (this.IsLoggedIn() ? "logged in" : "not logged in"));
-
-        this.LoginStatusChanged.next(this.IsLoggedIn());
+        console.log("User is " + (this.IsLoggedIn() ? "logged in with token " + this._storage.GetSessionToken() : "not logged in"));
     }
 
     public IsLoggedIn(): boolean
     {
-        return (this._storage.GetSessionToken() !== '');
+        return (this._storage.GetSessionToken() !== null);
     }
 
-    public Login(email: string, pass: string): Observable<LoginStatus>
+    public async Login(email: string, pass: string): Promise<LoginStatus>
     {
-        let ret = new Subject();
-       
-
-        if (email === '' || pass === '')
+        try
         {
-            ret.next(LoginStatus.EmptyInput);
-            return ret;
+            if (email === '' || pass === '') // TODO: real validation
+            {
+                return LoginStatus.EmptyInput;
+            }
+
+            let token = await this._cqrs.Send(new LoginQuery({ email: email, password: pass }));
+
+            console.log("Token: " + token);
+
+            this._storage.SetSessionToken(token);
+
+            return LoginStatus.LoggedIn;
         }
-
-        this._cqrs.Send(new LoginQuery({ email: email, password: pass })).subscribe((token: guid) =>
+        catch (ex)
         {
-            console.log("Token: " + token);
+            console.log("Login exception: ", ex);
 
-            this._storage.SetSessionToken(token);
+            this._storage.ClearSessionToken();
 
-            ret.next(LoginStatus.LoggedIn);
-
-            this.LoginStatusChanged.next(true);
-        },
-            (err) =>
+            switch (ex) // TODO
             {
-                console.log("Err: " + err);
-
-                switch (err)
-                {
-                    case 404: ret.next(LoginStatus.UserNotFound);
-                        break;
-                    case 401: ret.next(LoginStatus.WrongPassword);
-                        break;
-                    default: ret.next(LoginStatus.ConnectionProblem);
-                        break;
-                }
-
-                this._storage.SetSessionToken("");
-            });
-
-        return ret;
+                case 404: return LoginStatus.UserNotFound;
+                case 401: return LoginStatus.WrongPassword;
+                default: return LoginStatus.ConnectionProblem;
+            }
+        }
     }
 
-    public Register(email: string, pass: string): Observable<RegisterStatus>
-    {
-        let ret = new Subject();
 
-        this._cqrs.Send(new UserRegisterQuery({ email: email, password: pass })).subscribe((token: guid) =>
+    public async Register(email: string, pass: string): Promise<RegisterStatus>
+    {
+        try
         {
-            console.log("Token: " + token);
+            let token: guid = await this._cqrs.Send(new UserRegisterQuery({ email: email, password: pass }));
+
+            console.log("Token:", token);
 
             this._storage.SetSessionToken(token);
 
-            ret.next(RegisterStatus.Registered);
+            return RegisterStatus.Registered;
+        }
+        catch (ex)
+        {
+            console.log("Ex: ", ex);
 
-            this.LoginStatusChanged.next(true);
-        },
-            (err) =>
+            switch (ex)
             {
-                console.log("Err: " + err);
-
-                switch (err)
-                {
-                    case 406: ret.next(RegisterStatus.EmailTaken);
-                        break;
-                    default: ret.next(LoginStatus.ConnectionProblem);
-                        break;
-                }
-            });
-
-        return ret;
+                case 406: return RegisterStatus.EmailTaken;
+                default: return RegisterStatus.ConnectionProblem;
+            }
+        }
     }
 
     public Logout(): void
     {
         this._storage.SetSessionToken('');
-
-        this.LoginStatusChanged.next(false);
     }
 }

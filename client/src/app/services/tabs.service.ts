@@ -12,12 +12,12 @@ export class TabsService
 {
     constructor(private _cqrs: CqrsBus) { }
 
-    public GetChildren(parentId: guid): Observable<Tab[]>
+    public async GetChildren(parentId: guid): Promise<Tab[]>
     {
-        return this._cqrs.Send(new GetNotesQuery({ parentId: parentId }));
+        return await this._cqrs.Send(new GetNotesQuery({ parentId: parentId }));
     }
 
-    public AddSibling(parentId: guid, title: string): Observable<Tab>
+    public async AddSibling(parentId: guid, title: string): Promise<Tab>
     {
         const id: guid = UUID.UUID();
         const tab = new Tab();
@@ -27,19 +27,20 @@ export class TabsService
         tab.title = title;
         tab.content = '';
 
-        return this._cqrs.Send(new AddNoteCommand({ id: id, parentId: parentId, title: title }))
-            .map(() => tab);
+        await this._cqrs.Send(new AddNoteCommand({ id: id, parentId: parentId, title: title }));
+            
+        return tab; // TODO add try catch
     }
 
-    public Update(tab: Tab): Observable<void>
+    public async Update(tab: Tab): Promise<void>
     {
         console.log("Update:", tab);
         
-        return this._cqrs.Send(new UpdateNoteCommand(tab));
+        return await this._cqrs.Send(new UpdateNoteCommand(tab));
     }
 
-    public Delete(id: guid): Observable<void>
+    public async Delete(id: guid): Promise<void>
     {
-        return this._cqrs.Send(new DeleteNotesCommand({ id: id }));
+        return await this._cqrs.Send(new DeleteNotesCommand({ id: id }));
     }
 }
