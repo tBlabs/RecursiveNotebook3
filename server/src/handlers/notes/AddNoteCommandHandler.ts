@@ -7,6 +7,8 @@ import { AssignMessage } from "../../decorators/AssignMessage";
 import { INotesRepo } from "../../repositories/INotesRepo";
 import { NotesRepo } from "../../repositories/NotesRepo";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
+import { Exception } from "../../exceptions/Exception";
+import { ExceptionCode } from "../../shared/errors/ExceptionCode";
 
 @AssignMessage(AddNoteCommand)
 @injectable()
@@ -18,7 +20,7 @@ export class AddNoteCommandHandler implements IQueryHandler
     {    
         if (!context.user.claims.canAddNote)
         {
-           // throw new UnathorizedException();
+            throw new Exception(ExceptionCode.NoPermission);
         }
 
         let note: NoteEntity = new NoteEntity();

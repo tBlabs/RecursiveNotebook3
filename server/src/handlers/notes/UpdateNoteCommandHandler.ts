@@ -7,6 +7,8 @@ import { INotesRepo } from "../../repositories/INotesRepo";
 import { NotesRepo } from "../../repositories/NotesRepo";
 import { UpdateNoteCommand } from "../../messages/notes/UpdateNoteCommand";
 import { ICommandHandler } from "../../cqrs/ICommandHandler";
+import { ExceptionCode } from "../../shared/errors/ExceptionCode";
+import { Exception } from "../../exceptions/Exception";
 
 
 @AssignMessage(UpdateNoteCommand)
@@ -19,7 +21,7 @@ export class UpdateNoteCommandHandler implements ICommandHandler
     {
         if (!context.user.claims.canChangeNote)
         {
-           // throw new UnathorizedException();
+            throw new Exception(ExceptionCode.Unauthorized);
         }
 
         let note: NoteEntity = new NoteEntity();

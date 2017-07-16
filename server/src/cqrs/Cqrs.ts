@@ -2,8 +2,8 @@ import { LoginQueryHandler } from './../handlers/auth/LoginQueryHandler';
 import { ICommandHandler } from './ICommandHandler';
 import { container } from "../inversify.config";
 import { Context } from "../framework/Context";
-import { HandlerException } from "../framework/HandlerException";
-import { CqrsException } from "./CqrsException";
+import { Exception } from "../exceptions/Exception";
+import { ExceptionCode } from "../shared/errors/ExceptionCode";
 
 export class Cqrs
 {
@@ -24,8 +24,13 @@ export class Cqrs
     {
         let messageName = Object.keys(this.messageHandlers).find(i => i === name);
 
-        if (messageName === undefined) throw new CqrsException(`Could not find handler for message "${ name }".`);
-
+        if (messageName === undefined) 
+        {
+            console.log(`Can not find handler for message "${ name }"`);
+            
+            throw new Exception(ExceptionCode.CanNotResolveMessageHandler); 
+        }
+        
         return container.get(this.messageHandlers[messageName]);
     }
 

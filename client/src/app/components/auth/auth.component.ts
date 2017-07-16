@@ -1,4 +1,4 @@
-import { AuthService, LoginStatus, RegisterStatus } from './../../services/auth.service';
+import { AuthService, LoginStatus, RegisterStatus } from './../../services/AuthService';
 import { Component } from '@angular/core';
 
 enum AuthFormViewState
@@ -21,7 +21,7 @@ enum AuthFormViewState
               (keydown.enter)="Login(email.value, pass.value)"
               value="">
       </div>
-    
+   
       <div class="form-group" >   
         <input type="password" #pass                
               [ngClass]="{ 'alert-danger': passwordInputError, 'hide': !inputsVisible }"
@@ -66,13 +66,17 @@ export class AuthComponent
 
   constructor(private _auth: AuthService)
   {
-    // this._auth.LoginStatusChanged.subscribe((loginStatus: boolean) =>
-    // {
-    //   if (loginStatus)
-    //     this.SetFormState(AuthFormViewState.LogedIn);
-    //   else
-    //     this.SetFormState(AuthFormViewState.Initial);
-    // });
+    if (_auth.IsLoggedIn())  this.SetFormState(AuthFormViewState.LogedIn);
+
+    _auth.LoginStatusChanged.subscribe((loginStatus: boolean) => 
+    {
+      if (loginStatus == true)
+      {
+        this.SetFormState(AuthFormViewState.LogedIn);
+      }
+    });
+
+    // TODO nasłuchiwanie zmian w serwisie
   }
 
   private SetFormState(state: AuthFormViewState)

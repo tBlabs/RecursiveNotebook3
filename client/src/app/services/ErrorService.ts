@@ -11,6 +11,7 @@ export class ErrorService
 
     public Error(message: string)
     {
+        console.log("snack: "+message);
         this._snack.open(message, null, { duration: 1500 });
     }
 }

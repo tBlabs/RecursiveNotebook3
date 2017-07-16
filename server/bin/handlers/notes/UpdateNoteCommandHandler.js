@@ -52,6 +52,8 @@ require("reflect-metadata");
 var NoteEntity_1 = require("../../entities/NoteEntity");
 var AssignMessage_1 = require("../../decorators/AssignMessage");
 var UpdateNoteCommand_1 = require("../../messages/notes/UpdateNoteCommand");
+var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
+var Exception_1 = require("../../exceptions/Exception");
 var UpdateNoteCommandHandler = (function () {
     function UpdateNoteCommandHandler(_notes) {
         this._notes = _notes;
@@ -63,6 +65,7 @@ var UpdateNoteCommandHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         if (!context.user.claims.canChangeNote) {
+                            throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.Unauthorized);
                         }
                         note = new NoteEntity_1.NoteEntity();
                         note.id = command.id;

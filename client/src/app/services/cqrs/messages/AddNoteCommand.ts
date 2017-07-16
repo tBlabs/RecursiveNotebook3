@@ -1,5 +1,5 @@
+import { ICommand } from './../ICommand';
 import { guid } from 'app/common/types';
-import { ICommand } from './../ICommand.interface';
 
 export class AddNoteCommand implements ICommand
 {

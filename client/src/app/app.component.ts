@@ -1,6 +1,6 @@
+import { AuthService } from './services/AuthService';
 import { MdSnackBar } from '@angular/material';
 import { AuthComponent } from './components/auth/auth.component';
-import { AuthService, LoginStatus } from './services/auth.service';
 import { Component } from '@angular/core';
 
 @Component({
@@ -14,11 +14,11 @@ import { Component } from '@angular/core';
          
     <button *ngIf="!showTabs" (click)="Demo()" class="margin-top btn btn-danger center-block">See Example</button>
     <tabs *ngIf="showTabs"></tabs>
-
+<!--
     <button md-button (click)="openSnackBar()">
       Snack test!
     </button>
-
+-->
     <simple-clock theme="gray" (clicked)="OnClockClick($event)"></simple-clock>
 
     `,
@@ -26,19 +26,18 @@ import { Component } from '@angular/core';
 })
 export class AppComponent
 {
-  showTabs: boolean;
+  showTabs: boolean = false;
 
-  constructor(private _auth: AuthService, public _snackBar: MdSnackBar
-  )
+  constructor(private _auth: AuthService, public _snackBar: MdSnackBar)
   {
     this.showTabs = _auth.IsLoggedIn();
 
-    //_auth.LoginStatusChanged.subscribe(x => this.showTabs = x);
+    _auth.LoginStatusChanged.subscribe((loginStatus: boolean) => this.showTabs = loginStatus);
   }
 
   openSnackBar()
   {
-    this._snackBar.open("yo!", "", { duration: 1000 });
+    this._snackBar.open("yo!", null, { duration: 1000 });
   }
 
   OnClockClick(event)
@@ -49,12 +48,6 @@ export class AppComponent
 
   Demo()
   {
-    // this._auth.Login("demo", "demo").subscribe((s: LoginStatus) =>
-    // {
-    //   if (s == LoginStatus.UserNotFound) 
-    //   {
-    //     alert("No demo user in database");
-    //   }
-    // });
+    this._auth.Login("demo", "demo");
   }
 }

@@ -54,6 +54,8 @@ var auth_1 = require("../../services/auth");
 var User_1 = require("../../framework/User");
 var AssignMessage_1 = require("../../decorators/AssignMessage");
 var Claims_1 = require("../../framework/Claims");
+var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
+var Exception_1 = require("../../exceptions/Exception");
 var UserRegisterQueryHandler = (function () {
     function UserRegisterQueryHandler(_db, _auth) {
         this._db = _db;
@@ -64,13 +66,17 @@ var UserRegisterQueryHandler = (function () {
             var collection, item, newUserClaims, userEntity, user, token;
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this._db.Open('users')];
+                    case 0:
+                        collection = null;
+                        item = null;
+                        return [4, this._db.Open('users')];
                     case 1:
                         collection = _a.sent();
                         return [4, collection.findOne({ email: query.email })];
                     case 2:
                         item = _a.sent();
                         if (item) {
+                            throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.EmailTaken);
                         }
                         newUserClaims = new Claims_1.Claims();
                         newUserClaims.canAddNote = true;
@@ -91,7 +97,7 @@ var UserRegisterQueryHandler = (function () {
                         user.id = userEntity.id;
                         user.claims = userEntity.claims;
                         token = this._auth.GenerateTokenForUser(userEntity);
-                        return [2, token];
+                        return [2, { token: token }];
                 }
             });
         });

@@ -1,6 +1,5 @@
 import { TabsService } from './../../services/tabs.service';
 import { Tab } from './../../models/tab.model';
-import { CqrsBus } from './../../services/cqrs/cqrs-bus.service';
 import { Observable } from 'rxjs/Rx';
 import { Component, OnChanges, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { Location } from '@angular/common';
@@ -158,6 +157,15 @@ export class TabsListComponent implements OnInit, OnChanges
             }
             catch (ex)
             {
+                // if (ex instanceof ServerException)
+                // {
+                //     switch (ex.code)
+                //     {
+                //         case ExceptionCode.NoPermission:
+                //             break;
+                //     }
+                // }
+                
                 alert("Can not add new tab! Error: " + ex);
             }
         }

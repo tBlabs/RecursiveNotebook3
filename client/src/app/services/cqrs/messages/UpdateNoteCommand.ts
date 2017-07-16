@@ -1,5 +1,5 @@
+import { ICommand } from './../ICommand';
 import { Tab } from './../../../models/tab.model';
-import { ICommand } from './../ICommand.interface';
 import { guid } from "app/common/types";
 
 export class UpdateNoteCommand implements ICommand

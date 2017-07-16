@@ -41,7 +41,6 @@ var auth_1 = require("./../../services/auth");
 var UserRegisterQueryHandler_1 = require("./../../handlers/auth/UserRegisterQueryHandler");
 var UserRegisterQuery_1 = require("../../messages/auth/UserRegisterQuery");
 var Database_1 = require("../../database/Database");
-var HandlerException_1 = require("../../framework/HandlerException");
 var inversify_config_1 = require("../../inversify.config");
 describe('User Register Query Handler', function () {
     var userRegisterQuery = null;
@@ -81,7 +80,7 @@ describe('User Register Query Handler', function () {
         });
     }); });
     it('should not register user again (email taken error)', function (done) { return __awaiter(_this, void 0, void 0, function () {
-        var ex_1, e;
+        var ex_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4, database.Clean('users')];
@@ -99,9 +98,6 @@ describe('User Register Query Handler', function () {
                     return [3, 6];
                 case 5:
                     ex_1 = _a.sent();
-                    if (ex_1 instanceof HandlerException_1.HandlerException) {
-                        e = ex_1;
-                    }
                     return [3, 6];
                 case 6:
                     done();

@@ -44,7 +44,9 @@ export class NotesRepo implements INotesRepo
     {
         let collection = await this._db.Open(this.collectionName);
 
-        let cursor: Cursor<any> = collection.find({ parentId: parentId, userId: userId }, { _id: 0, id: 1, parentId: 1, title: 1, content: 1 });
+        let cursor: Cursor = collection.find(
+            { parentId: parentId, userId: userId },
+            { _id: 0, id: 1, parentId: 1, title: 1, content: 1 });
 
         let res = cursor.toArray();
 
@@ -59,7 +61,7 @@ export class NotesRepo implements INotesRepo
     {
         this.notesToDelete.push(parentId);
 
-        let cursor: Cursor<any> = await collection.find({ parentId: parentId, userId: userId }, { _id: 0, id: 1 });
+        let cursor: Cursor = await collection.find({ parentId: parentId, userId: userId }, { _id: 0, id: 1 });
         let children: any[] = await cursor.toArray(); // Not a NoteEntity[] !
         let childrenIds = children.map(x => x.id);
 

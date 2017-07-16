@@ -1,6 +1,6 @@
+import { CqrsBus } from './cqrs/CqrsBus';
 import { Tab } from './../models/tab.model';
 import { guid } from 'app/common/types';
-import { CqrsBus } from './cqrs/cqrs-bus.service';
 import { Http, URLSearchParams, RequestOptionsArgs, ResponseContentType, Headers, Response } from '@angular/http';
 import { Observable } from 'rxjs/Rx';
 import { Injectable } from '@angular/core';

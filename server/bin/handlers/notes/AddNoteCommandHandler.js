@@ -52,6 +52,8 @@ require("reflect-metadata");
 var NoteEntity_1 = require("../../entities/NoteEntity");
 var AddNoteCommand_1 = require("../../messages/notes/AddNoteCommand");
 var AssignMessage_1 = require("../../decorators/AssignMessage");
+var Exception_1 = require("../../exceptions/Exception");
+var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
 var AddNoteCommandHandler = (function () {
     function AddNoteCommandHandler(_notes) {
         this._notes = _notes;
@@ -63,6 +65,7 @@ var AddNoteCommandHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         if (!context.user.claims.canAddNote) {
+                            throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.NoPermission);
                         }
                         note = new NoteEntity_1.NoteEntity();
                         note.id = command.id;

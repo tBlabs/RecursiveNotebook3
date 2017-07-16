@@ -1,12 +1,15 @@
+import { ConnectionTimeoutException } from './../../exceptions/ConnectionTimeoutException';
+import { UnhandledException } from './../../exceptions/UnhandledException';
+import { IQuery } from './IQuery';
+import { ICommand } from './ICommand';
 import { ErrorService } from './../ErrorService';
 import { MdSnackBar } from '@angular/material';
-import { Http, RequestOptions, Headers } from '@angular/http';
+import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs/Observable';
-import { ICommand } from './ICommand.interface';
-import { IQuery } from './IQuery.interface';
 import { StorageService } from './../storage.service';
-import 'rxjs';
+import { TimeoutError } from "rxjs";
+import { Dupa } from "../Dupa";
+import { ServerException } from "../../shared/errors/errors";
 
 @Injectable()
 export class CqrsBus
@@ -18,13 +21,13 @@ export class CqrsBus
         private _storage: StorageService,
         private _errorService: ErrorService)
     {
-        if (!!process.env.PORT) // Heroku enviroment
+        if (!!process.env.PORT) // Production/Heroku enviroment
         {
             console.log("Production host");
 
-            this.API = 'api/cqrsbus';
+            this.API = 'api/cqrsbus';   
         }
-        else // Local/test enviroment
+        else // Development/Local enviroment
         {
             console.log("Local host");
 
@@ -52,7 +55,8 @@ export class CqrsBus
 
         try
         {
-            let response = await this._http.post(this.API, messageAsJson, options).toPromise();
+            let response: Response = await this._http.post(this.API, messageAsJson, options).timeout(3000).toPromise();
+            console.log('POST Response:',response);
 
             if (response.text() !== '')
             {
@@ -69,24 +73,41 @@ export class CqrsBus
                 return null;
             }
         }
-        catch (ex)
+        catch (ex) // Jump here in case of non 200 respond
         {
-          //  console.log('ex:',ex);
-          //  console.log('ex.json:',ex.json());
-            
-            let exception = JSON.parse(ex);
+            console.log('[CQRS Bus] ex:', ex);
 
-            console.log('[CQRS.Send] Message exception: ', exception);
+            //  if (1) throw new ServerException();
 
-            if (ex.status === 0)
+            if (ex instanceof TimeoutError) // We don't get here if server is disabled
             {
-                this._errorService.Error("Server is not responding");
+                console.log("TIMEOUT");
+                this._errorService.Error("Connection timeout");
+                throw new ConnectionTimeoutException();
             }
+            else if (ex instanceof Response)
+            {
+                if (ex.status === 0) // We get here if server is disabled
+                {
+                    this._errorService.Error("Server is not responding");
+                    // throw new ServerNonResponsiveException();
+                }
+                else
+                {
+                    let serverException: ServerException = ex.json();
 
-            this._errorService.Error(exception.message);
+                    console.log('[CQRS.Send] ServerException: ', serverException);
+                    this._errorService.Error(serverException.message);
 
-
-            throw exception;
+                    throw new ServerException(serverException);
+                }
+            }
+            else 
+            {
+                console.log("Unhandled exception type");
+                this._errorService.Error('Unhandled exception');
+                throw new UnhandledException();
+            }
         }
 
 

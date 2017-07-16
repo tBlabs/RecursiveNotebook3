@@ -36,7 +36,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_config_1 = require("../inversify.config");
-var CqrsException_1 = require("./CqrsException");
+var Exception_1 = require("../exceptions/Exception");
+var ExceptionCode_1 = require("../shared/errors/ExceptionCode");
 var Cqrs = (function () {
     function Cqrs() {
     }
@@ -49,8 +50,10 @@ var Cqrs = (function () {
     };
     Cqrs.ResolveMessageHandler = function (name) {
         var messageName = Object.keys(this.messageHandlers).find(function (i) { return i === name; });
-        if (messageName === undefined)
-            throw new CqrsException_1.CqrsException("Could not find handler for message \"" + name + "\".");
+        if (messageName === undefined) {
+            console.log("Can not find handler for message \"" + name + "\"");
+            throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.CanNotResolveMessageHandler);
+        }
         return inversify_config_1.container.get(this.messageHandlers[messageName]);
     };
     Cqrs.Execute = function (messagePackage, context) {

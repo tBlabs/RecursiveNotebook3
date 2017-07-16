@@ -1,5 +1,5 @@
+import { IQuery } from './../IQuery';
 import { guid } from 'app/common/types';
-import { IQuery } from './../IQuery.interface';
 
 export class LoginQuery implements IQuery<guid>
 {

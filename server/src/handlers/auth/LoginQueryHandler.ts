@@ -1,4 +1,4 @@
-import { HandlerException } from './../../framework/HandlerException';
+import { Exception } from './../../exceptions/Exception';
 import { UserEntity } from './../../entities/UserEntity';
 import { injectable, Container } from 'inversify';
 import 'reflect-metadata';
@@ -11,8 +11,8 @@ import { LoginQuery } from "../../messages/auth/LoginQuery";
 import { AssignMessage } from "../../decorators/AssignMessage";
 import { Validator } from "validator.ts/Validator";
 import { ValidationErrorInterface } from "validator.ts/ValidationErrorInterface";
-import { Ex } from "../../shared/errors/errors";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
+import { ExceptionCode } from "../../shared/errors/ExceptionCode";
 
 @AssignMessage(LoginQuery)
 @injectable()
@@ -20,7 +20,7 @@ export class LoginQueryHandler implements IQueryHandler
 {
     constructor(private _db: Database, private _auth: Auth) { }
 
-    public async Handle(query: LoginQuery, context: Context): Promise<string>
+    public async Handle(query: LoginQuery, context: Context): Promise<any>
     {
       //  console.log("qqqqquery: "+JSON.stringify(query));
 
@@ -58,14 +58,14 @@ export class LoginQueryHandler implements IQueryHandler
 
         if ((entry.ok != 1) || (entry.value == null))
         {
-            throw new HandlerException(Ex.UserNotExists);       
+            throw new Exception(ExceptionCode.UserNotExists);       
         }
 
         let userEntity: UserEntity = entry.value;
 
         if (userEntity.password != query.password)
         {
-            throw new HandlerException(Ex.WrongPassword);
+            throw new Exception(ExceptionCode.WrongPassword);
         }
 
         let user = new User();
@@ -74,7 +74,7 @@ export class LoginQueryHandler implements IQueryHandler
 
         let token: string = this._auth.GenerateTokenForUser(userEntity);
 
-        return token;
+        return { token: token };
     }
 }
 

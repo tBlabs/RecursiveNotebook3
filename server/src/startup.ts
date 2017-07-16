@@ -1,6 +1,8 @@
+import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
+import { SERVER_EXCEPTIONS } from './shared/errors/errors';
+import { ExceptionCode } from './shared/errors/ExceptionCode';
 import { Database } from './database/Database';
 import { Auth } from './services/auth';
-import { HandlerException } from './framework/HandlerException';
 import { Context } from './framework/Context';
 import './handlers'; // This import is required here (in app entry point) because of necessity of call AssignMessage for every handler class
 import * as express from 'express';
@@ -13,12 +15,18 @@ import { Claims } from "./framework/Claims";
 import { Validator } from "validator.ts/Validator";
 import { Contains, IsInt, IsLength, IsEmail, IsFQDN, IsDate } from "validator.ts/decorator/Validation";
 import { Cqrs } from "./cqrs/Cqrs";
-import { Ex } from "./shared/errors/errors";
+import { ServerException } from "./shared/errors/errors";
 import { injectable } from 'inversify';
 import 'reflect-metadata';
 import { OK } from 'http-status-codes';
-import { CqrsException } from "./cqrs/CqrsException";
+import { Exception } from "./exceptions/Exception";
 
+interface IA { }
+class Base { }
+class Base1 extends Base { }
+class Base2 extends Base { }
+class A extends Base1 implements IA { }
+class B extends Base2 { }
 
 class Startup
 {
@@ -33,14 +41,21 @@ class Startup
 
         if (req)
         {
-            let authorizationHeader = req.headers['authorization'];
-
-            if (authorizationHeader)
+            try
             {
-                let authService = container.resolve(Auth);
-                let user = authService.ExtractUserFromToken(authorizationHeader);
+                let authorizationHeader = req.headers['authorization'];
 
-                context.user = user;
+                if (authorizationHeader)
+                {
+                    let authService = container.resolve(Auth);
+                    let user = authService.ExtractUserFromToken(authorizationHeader);
+
+                    context.user = user;
+                }
+            }
+            catch (ex)
+            {
+                console.log("Auth token parse error");
             }
         }
 
@@ -52,44 +67,29 @@ class Startup
 
             if (req)
             {
-
                 let result = await Cqrs.Execute(req.body, context);
 
                 console.log('Handler result:', result);
 
-                  if (res) res.status(OK).send(result);
+                if (res) res.status(OK).send(result);
             }
         }
         catch (ex)
         {
-            if (ex instanceof HandlerException)
-            {
-                console.log("Handler exception:", ex);
+            let serverException: ServerException = SERVER_EXCEPTIONS.find(e => e.code == ExceptionCode.UnhandledException);
 
-                if (ex.exception !== undefined)
-                {
-                    //    console.log(JSON.stringify(ex));
-                   // console.log("RES: ",res);
-                    let serializedException: string = JSON.stringify(ex.exception);
-
-                   if (res) res.status(ex.exception.httpStatus).send(serializedException);
-                   //  res.status(201).send("END");
-                }
-
-            }
-            else
-            if (ex instanceof CqrsException)
+            if (ex instanceof Exception)
             {
-                console.log("CQRS Engine exception:", ex);
-                
-                if (res) res.status(500).send((ex as CqrsException).message);
-            }
-            else
-            {
-                console.log("Undefined exception");
-                 if (res) res.status(500).send("Undefined exception");
+                let exception: Exception = ex as Exception;
+                serverException = SERVER_EXCEPTIONS.find(x => x.code === exception.code);
+                serverException.extra = ex.extra;
             }
 
+            console.log("Returned ServerException:", serverException);
+
+
+            if (res)
+                res.status(serverException.httpStatus).send(JSON.stringify(serverException));
         }
     }
 
@@ -97,13 +97,28 @@ class Startup
     public static async Start(): Promise<void>
     {
         console.log("*** START ***");
+     //   console.log("ASDF: ",process.env.ASDF);
+        if (0)
+        {
+            let a = new A();
+            if (a instanceof A) console.log('a is A');
+            if (a instanceof Base1) console.log('a is Base1');
+            if (a instanceof Base) console.log('a is Base');
+            //  if (a instanceof IA) console.log('a is IA');
+
+            // let b = new B();
+            // if (b instanceof A) console.log('b is A');
+            // if (b instanceof Base2) console.log('b is Base2');
+            // if (b instanceof Base) console.log('b is Base');
+
+        }
+
         if (0)
         {
             // this.Route();
             Cqrs.PrintMessagesHandlers();
             await this.HandleCqrsBus(null, null);
         }
-
 
         if (0)
         {
@@ -132,19 +147,18 @@ class Startup
             console.log("---------------------");
         }
 
-        //      Cqrs.PrintMessagesHandlers();
         // if (0)
         {
             let host = express();
 
             host.use(bodyParser.json());
-           // host.use(cors());
+            // host.use(cors());
             host.all('/*', function (req, res, next)
             {
                 res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-                res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");   
+                res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
                 res.header("Access-Control-Allow-Methods", "POST");
-                next(); 
+                next();
             });
             //  host.use(express.static('static'));
             //ls  console.log("public dir: "+__dirname);

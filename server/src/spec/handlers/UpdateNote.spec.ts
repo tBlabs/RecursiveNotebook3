@@ -5,7 +5,6 @@ import { AddNoteCommandHandler } from './../../handlers/notes/AddNoteCommandHand
 import { NoteEntity } from "../../entities/NoteEntity";
 import { guid } from "../../types";
 import { INotesRepo } from "../../repositories/INotesRepo";
-import { HandlerException } from "../../framework/HandlerException";
 import { NotesRepoMock } from "./NotesRepo.mock";
 import { UpdateNoteCommand } from "../../messages/notes/UpdateNoteCommand";
 

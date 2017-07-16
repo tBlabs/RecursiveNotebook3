@@ -1,4 +1,14 @@
 "use strict";
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -35,8 +45,9 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var errors_1 = require("./shared/errors/errors");
+var ExceptionCode_1 = require("./shared/errors/ExceptionCode");
 var auth_1 = require("./services/auth");
-var HandlerException_1 = require("./framework/HandlerException");
 var Context_1 = require("./framework/Context");
 require("./handlers");
 var express = require("express");
@@ -45,23 +56,61 @@ var inversify_config_1 = require("./inversify.config");
 var Cqrs_1 = require("./cqrs/Cqrs");
 require("reflect-metadata");
 var http_status_codes_1 = require("http-status-codes");
-var CqrsException_1 = require("./cqrs/CqrsException");
+var Exception_1 = require("./exceptions/Exception");
+var Base = (function () {
+    function Base() {
+    }
+    return Base;
+}());
+var Base1 = (function (_super) {
+    __extends(Base1, _super);
+    function Base1() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Base1;
+}(Base));
+var Base2 = (function (_super) {
+    __extends(Base2, _super);
+    function Base2() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return Base2;
+}(Base));
+var A = (function (_super) {
+    __extends(A, _super);
+    function A() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return A;
+}(Base1));
+var B = (function (_super) {
+    __extends(B, _super);
+    function B() {
+        return _super !== null && _super.apply(this, arguments) || this;
+    }
+    return B;
+}(Base2));
 var Startup = (function () {
     function Startup() {
     }
     Startup.HandleCqrsBus = function (req, res) {
         return __awaiter(this, void 0, void 0, function () {
-            var context, authorizationHeader, authService, user, result, ex_1, serializedException;
+            var context, authorizationHeader, authService, user, result, ex_1, serverException, exception_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         context = new Context_1.Context();
                         if (req) {
-                            authorizationHeader = req.headers['authorization'];
-                            if (authorizationHeader) {
-                                authService = inversify_config_1.container.resolve(auth_1.Auth);
-                                user = authService.ExtractUserFromToken(authorizationHeader);
-                                context.user = user;
+                            try {
+                                authorizationHeader = req.headers['authorization'];
+                                if (authorizationHeader) {
+                                    authService = inversify_config_1.container.resolve(auth_1.Auth);
+                                    user = authService.ExtractUserFromToken(authorizationHeader);
+                                    context.user = user;
+                                }
+                            }
+                            catch (ex) {
+                                console.log("Auth token parse error");
                             }
                         }
                         _a.label = 1;
@@ -78,24 +127,15 @@ var Startup = (function () {
                     case 3: return [3, 5];
                     case 4:
                         ex_1 = _a.sent();
-                        if (ex_1 instanceof HandlerException_1.HandlerException) {
-                            console.log("Handler exception:", ex_1);
-                            if (ex_1.exception !== undefined) {
-                                serializedException = JSON.stringify(ex_1.exception);
-                                if (res)
-                                    res.status(ex_1.exception.httpStatus).send(serializedException);
-                            }
+                        serverException = errors_1.SERVER_EXCEPTIONS.find(function (e) { return e.code == ExceptionCode_1.ExceptionCode.UnhandledException; });
+                        if (ex_1 instanceof Exception_1.Exception) {
+                            exception_1 = ex_1;
+                            serverException = errors_1.SERVER_EXCEPTIONS.find(function (x) { return x.code === exception_1.code; });
+                            serverException.extra = ex_1.extra;
                         }
-                        else if (ex_1 instanceof CqrsException_1.CqrsException) {
-                            console.log("CQRS Engine exception:", ex_1);
-                            if (res)
-                                res.status(500).send(ex_1.message);
-                        }
-                        else {
-                            console.log("Undefined exception");
-                            if (res)
-                                res.status(500).send("Undefined exception");
-                        }
+                        console.log("Returned ServerException:", serverException);
+                        if (res)
+                            res.status(serverException.httpStatus).send(JSON.stringify(serverException));
                         return [3, 5];
                     case 5: return [2];
                 }
@@ -105,11 +145,21 @@ var Startup = (function () {
     Startup.Start = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
-            var host, port_1;
+            var a, host, port_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         console.log("*** START ***");
+                        console.log("ASDF: ", process.env.ASDF);
+                        if (0) {
+                            a = new A();
+                            if (a instanceof A)
+                                console.log('a is A');
+                            if (a instanceof Base1)
+                                console.log('a is Base1');
+                            if (a instanceof Base)
+                                console.log('a is Base');
+                        }
                         if (!0) return [3, 2];
                         Cqrs_1.Cqrs.PrintMessagesHandlers();
                         return [4, this.HandleCqrsBus(null, null)];

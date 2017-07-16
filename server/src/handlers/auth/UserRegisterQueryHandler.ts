@@ -10,6 +10,8 @@ import { User } from "../../framework/User";
 import { AssignMessage } from "../../decorators/AssignMessage";
 import { Claims } from "../../framework/Claims";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
+import { ExceptionCode } from "../../shared/errors/ExceptionCode";
+import { Exception } from "../../exceptions/Exception";
 
 @AssignMessage(UserRegisterQuery)
 @injectable()
@@ -19,14 +21,27 @@ export class UserRegisterQueryHandler implements IQueryHandler
 
     public async Handle(query: UserRegisterQuery, context: Context): Promise<any>
     {
-        let collection = await this._db.Open('users');
+        let collection = null;
 
-        let item = await collection.findOne({ email: query.email });
+        let item = null;
+        // try
+        // {
+             collection = await this._db.Open('users');
 
-        if (item)
-        {
-      //      throw new UserAlreadyExistsException();
-        }
+             item = await collection.findOne({ email: query.email });
+         //   console.log('item:',item);
+            
+            if (item)
+            {
+                throw new Exception(ExceptionCode.EmailTaken);
+            }
+        // }
+        // catch (ex)
+        // {
+        //   //  console.log(ex);
+            
+        // }
+       
 
         let newUserClaims = new Claims();
         newUserClaims.canAddNote = true;
@@ -50,7 +65,7 @@ export class UserRegisterQueryHandler implements IQueryHandler
 
         let token = this._auth.GenerateTokenForUser(userEntity);
 
-        return token;
+        return { token: token };
     }
 }
 

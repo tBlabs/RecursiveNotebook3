@@ -3,7 +3,6 @@ import { Auth } from './../../services/auth';
 import { UserRegisterQueryHandler } from './../../handlers/auth/UserRegisterQueryHandler';
 import { UserRegisterQuery } from "../../messages/auth/UserRegisterQuery";
 import { Database } from "../../database/Database";
-import { HandlerException } from "../../framework/HandlerException";
 import { container } from "../../inversify.config";
 
 
@@ -49,12 +48,12 @@ describe('User Register Query Handler', () =>
         }
         catch (ex)
         {
-            if (ex instanceof HandlerException)
-            {
-                let e: HandlerException = ex as HandlerException;
+            // if (ex instanceof HandlerException)
+            // {
+            //     let e: HandlerException = ex as HandlerException;
 
-              //  expect(e.message).toBe("Email taken");
-            }
+            //   //  expect(e.message).toBe("Email taken");
+            // }
         }
 
         done();
