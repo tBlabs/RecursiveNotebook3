@@ -10,7 +10,7 @@ export class ServerException
 
     public constructor(init?: Partial<any>)
     {
-        Object.assign(this, init);
+       Object.assign(this, init);
     }
 }
 

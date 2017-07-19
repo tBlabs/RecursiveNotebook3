@@ -1,6 +1,6 @@
 import { AuthService } from './services/AuthService';
 import { CqrsBus } from './services/cqrs/CqrsBus';
-import { ErrorService } from './services/ErrorService';
+import { SnackService } from './services/ErrorService';
 import { MdSnackBar, MaterialModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { TabsModule } from './tabs.module';
@@ -14,12 +14,12 @@ import { AppComponent } from './app.component';
 
 
 @NgModule({
-  declarations: 
+  declarations:
   [
     AppComponent,
     AuthComponent
   ],
-  imports: 
+  imports:
   [
     BrowserModule,
     BrowserAnimationsModule,
@@ -28,13 +28,13 @@ import { AppComponent } from './app.component';
     TabsModule,
     MaterialModule
   ],
-  providers: 
+  providers:
   [
     CqrsBus,
     StorageService,
     AuthService,
     MdSnackBar,
-    ErrorService
+    SnackService
   ],
   bootstrap:
   [
@@ -43,3 +43,4 @@ import { AppComponent } from './app.component';
   schemas: [CUSTOM_ELEMENTS_SCHEMA]
 })
 export class AppModule { }
+

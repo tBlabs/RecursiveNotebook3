@@ -1,5 +1,4 @@
-import { Cursor } from '@types/mongodb';
-import { Collection } from '@types/mongodb';
+import { Cursor, Collection } from 'mongodb';
 import { Database } from "../database/Database";
 import { container } from "../inversify.config";
 

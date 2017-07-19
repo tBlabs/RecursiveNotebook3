@@ -51,6 +51,8 @@ var inversify_1 = require("inversify");
 require("reflect-metadata");
 var AssignMessage_1 = require("../../decorators/AssignMessage");
 var DeleteNotesCommand_1 = require("../../messages/notes/DeleteNotesCommand");
+var Exception_1 = require("../../exceptions/Exception");
+var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
 var DeleteNotesCommandHandler = (function () {
     function DeleteNotesCommandHandler(_notes) {
         this._notes = _notes;
@@ -61,6 +63,7 @@ var DeleteNotesCommandHandler = (function () {
                 switch (_a.label) {
                     case 0:
                         if (!context.user.claims.canDeleteNotes) {
+                            throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.NoPermission);
                         }
                         return [4, this._notes.Delete(command.id, context.user.id)];
                     case 1: return [2, _a.sent()];

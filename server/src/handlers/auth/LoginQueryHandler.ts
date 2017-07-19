@@ -6,13 +6,13 @@ import { Context } from "../../framework/Context";
 import { Database } from "../../database/Database";
 import { Auth } from "../../services/auth";
 import { User } from "../../framework/User";
-import { FindAndModifyWriteOpResultObject } from "@types/mongodb";
 import { LoginQuery } from "../../messages/auth/LoginQuery";
 import { AssignMessage } from "../../decorators/AssignMessage";
 import { Validator } from "validator.ts/Validator";
 import { ValidationErrorInterface } from "validator.ts/ValidationErrorInterface";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
 import { ExceptionCode } from "../../shared/errors/ExceptionCode";
+import { FindAndModifyWriteOpResultObject } from "mongodb";
 
 @AssignMessage(LoginQuery)
 @injectable()

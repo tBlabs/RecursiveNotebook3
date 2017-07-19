@@ -8,7 +8,8 @@
     "npm": "4.2.0"
   },
   "scripts": {
-    "init": "npm i && rm ./server/node_modules -rf && mv ./node_modules ./server -f && sudo npm i typescript -g",
+    "init": "sudo npm i && sudo npm i typescript jasmine -g && sudo rm ./server/node_modules -rf && sudo mv ./node_modules ./server -f",
+    "init2": "sudo npm i && sudo npm i typescript jasmine -g",
     "cleanserver": "rm server/bin -rf",
     "buildclient": "cp shared client/src/app -r",
     "buildserver": "cp shared server/src -r && tsc -p server",
@@ -32,6 +33,7 @@
   "dependencies": {
     "@angular/material": "^2.0.0-beta.6",
     "@types/body-parser": "^1.16.3",
+    "@types/dotenv": "^4.0.0",
     "@types/express": "^4.0.35",
     "@types/jasmine": "^2.5.41",
     "@types/jwt-simple": "^0.5.33",
@@ -39,6 +41,7 @@
     "@types/uuid": "^2.0.29",
     "asyncawait": "^1.0.6",
     "body-parser": "^1.17.1",
+    "dotenv": "^4.0.0",
     "express": "^4.15.2",
     "express-cors": "0.0.3",
     "http-status-codes": "^1.1.6",

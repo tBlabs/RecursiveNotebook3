@@ -2,7 +2,7 @@ import { ConnectionTimeoutException } from './../../exceptions/ConnectionTimeout
 import { UnhandledException } from './../../exceptions/UnhandledException';
 import { IQuery } from './IQuery';
 import { ICommand } from './ICommand';
-import { ErrorService } from './../ErrorService';
+import { SnackService } from './../ErrorService';
 import { MdSnackBar } from '@angular/material';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
@@ -19,7 +19,7 @@ export class CqrsBus
     constructor(
         private _http: Http,
         private _storage: StorageService,
-        private _errorService: ErrorService)
+        private _snackService: SnackService)
     {
         if (!!process.env.PORT) // Production/Heroku enviroment
         {
@@ -38,6 +38,8 @@ export class CqrsBus
 
     public async Send(message: ICommand | IQuery<any>): Promise<any>
     {
+        // if (1) throw new ServerException();
+     
         // Message class ---into---> { class_name: { class_fields }}
         const messagePackage = {};
         messagePackage[message.constructor.name] = message;
@@ -77,19 +79,20 @@ export class CqrsBus
         {
             console.log('[CQRS Bus] ex:', ex);
 
-            //  if (1) throw new ServerException();
+            // throw new ServerException();
+            //   if (1) throw new ServerException();
 
             if (ex instanceof TimeoutError) // We don't get here if server is disabled
             {
                 console.log("TIMEOUT");
-                this._errorService.Error("Connection timeout");
+                this._snackService.Error("Connection timeout");
                 throw new ConnectionTimeoutException();
             }
             else if (ex instanceof Response)
             {
                 if (ex.status === 0) // We get here if server is disabled
                 {
-                    this._errorService.Error("Server is not responding");
+                    this._snackService.Error("Server is not responding");
                     // throw new ServerNonResponsiveException();
                 }
                 else
@@ -97,15 +100,16 @@ export class CqrsBus
                     let serverException: ServerException = ex.json();
 
                     console.log('[CQRS.Send] ServerException: ', serverException);
-                    this._errorService.Error(serverException.message);
+                    this._snackService.Error(serverException.message);
 
-                    throw new ServerException(serverException);
+                   // throw new ServerException(serverException);
+                    throw serverException;
                 }
             }
             else 
             {
                 console.log("Unhandled exception type");
-                this._errorService.Error('Unhandled exception');
+                this._snackService.Error('Unhandled exception');
                 throw new UnhandledException();
             }
         }

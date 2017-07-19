@@ -2,9 +2,9 @@ import { injectable } from 'inversify';
 import 'reflect-metadata';
 import { NoteEntity } from "../entities/NoteEntity";
 import { Database } from "../database/Database";
-import { Collection, Cursor, UpdateWriteOpResult } from "@types/mongodb";
 import { guid } from "../types";
 import { INotesRepo } from "./INotesRepo";
+import { UpdateWriteOpResult, Cursor, Collection } from "mongodb";
 
 @injectable()
 export class NotesRepo implements INotesRepo

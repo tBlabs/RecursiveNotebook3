@@ -13,3 +13,9 @@ html, body, app-root
         -ms-flex-direction: column;
             flex-direction: column; 
 }
+
+.red-alert
+{
+    background: red;
+    color: white;
+}

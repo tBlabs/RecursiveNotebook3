@@ -1,3 +1,4 @@
+import { ServerException } from './../../../../shared/errors/errors';
 import { CqrsBus } from './cqrs/CqrsBus';
 import { Tab } from './../models/tab.model';
 import { guid } from 'app/common/types';
@@ -28,14 +29,12 @@ export class TabsService
         tab.content = '';
 
         await this._cqrs.Send(new AddNoteCommand({ id: id, parentId: parentId, title: title }));
-            
+
         return tab; // TODO add try catch
     }
 
     public async Update(tab: Tab): Promise<void>
     {
-        console.log("Update:", tab);
-        
         return await this._cqrs.Send(new UpdateNoteCommand(tab));
     }
 

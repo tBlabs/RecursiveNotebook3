@@ -4,8 +4,8 @@
             position: fixed;
             bottom: 0;
             left: 0;
-            width: 100%;
-            height: 30px;
+            width: 120px;
+            padding: 8px 30px;
             background: blue;
             color: #ddd;
             xmargin: 300px auto 0;
@@ -40,14 +40,14 @@
         constructor(args)
         {
             super();
-            console.log("SimpleClock created");
+           // console.log("SimpleClock created");
             this.shadow = this.attachShadow({ mode: 'open' });
         }
 
 
         onClick(e)
         {
-            console.log("SimpleClock clicked!");
+        //    console.log("SimpleClock clicked!");
             this.dispatchEvent(new CustomEvent('clicked',
                 {
                     detail: { foo: "bar" },
@@ -71,7 +71,7 @@
 
         connectedCallback()
         {
-            console.log("SimpleClock connected");
+        //    console.log("SimpleClock connected");
 
             this.CacheDOM();
 

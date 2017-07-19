@@ -1,3 +1,6 @@
+
+require('dotenv').config(); // Loads variables from '.env' file to process.env
+
 import { INTERNAL_SERVER_ERROR } from 'http-status-codes';
 import { SERVER_EXCEPTIONS } from './shared/errors/errors';
 import { ExceptionCode } from './shared/errors/ExceptionCode';
@@ -21,12 +24,6 @@ import 'reflect-metadata';
 import { OK } from 'http-status-codes';
 import { Exception } from "./exceptions/Exception";
 
-interface IA { }
-class Base { }
-class Base1 extends Base { }
-class Base2 extends Base { }
-class A extends Base1 implements IA { }
-class B extends Base2 { }
 
 class Startup
 {
@@ -97,21 +94,6 @@ class Startup
     public static async Start(): Promise<void>
     {
         console.log("*** START ***");
-     //   console.log("ASDF: ",process.env.ASDF);
-        if (0)
-        {
-            let a = new A();
-            if (a instanceof A) console.log('a is A');
-            if (a instanceof Base1) console.log('a is Base1');
-            if (a instanceof Base) console.log('a is Base');
-            //  if (a instanceof IA) console.log('a is IA');
-
-            // let b = new B();
-            // if (b instanceof A) console.log('b is A');
-            // if (b instanceof Base2) console.log('b is Base2');
-            // if (b instanceof Base) console.log('b is Base');
-
-        }
 
         if (0)
         {
@@ -160,29 +142,13 @@ class Startup
                 res.header("Access-Control-Allow-Methods", "POST");
                 next();
             });
-            //  host.use(express.static('static'));
-            //ls  console.log("public dir: "+__dirname);
-
-            //   host.use('/public', express.static('/home/tb/Projects/RecursiveNotebook3/server/src/public'));
-            //  host.use('/public', express.static(__dirname+'/../src/public'));
-            //     host.use('/public', express.static(__dirname+'/../src/public'));
+       
+     
             host.use(express.static(__dirname + '/../../client/dist'));
 
             host.get('/test', async (req, res) =>
             {
                 console.log("/test GET hit!");
-
-                try
-                {
-                    // let y = await Cq.Execute();
-                    // console.log("aaaaaaaaa: ", y);
-                }
-                catch (ex)
-                {
-                    console.log("bbbbbbbbb: ", ex);
-
-                }
-
 
                 res.status(200).end("This is respond for /test hit.");
             });
@@ -199,24 +165,3 @@ class Startup
 }
 
 Startup.Start();
-
-// var express = require('express');
-// var app = express();
-
-// app.set('port', (process.env.PORT || 5000));
-
-// app.use(express.static(__dirname + '/public'));
-
-// app.get('/', function (request, response)
-// {
-//     console.log("HIT!!!");
-
-//     response.send("hello there!");
-// });
-
-// app.listen(app.get('port'), function ()
-// {
-//     console.log('Node app is running on port', app.get('port'));
-// });
-
-

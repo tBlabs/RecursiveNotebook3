@@ -1,3 +1,4 @@
+import { ServerException } from './../../../../../shared/errors/errors';
 import { TabsService } from './../../services/tabs.service';
 import { Tab } from './../../models/tab.model';
 import { Observable } from 'rxjs/Rx';
@@ -5,6 +6,7 @@ import { Component, OnChanges, OnInit, Input, Output, EventEmitter } from '@angu
 import { Location } from '@angular/common';
 import { Title } from '@angular/platform-browser';
 import { EmptyGuid } from './../../common/guid.extension';
+import { ExceptionCode } from "app/shared/errors/ExceptionCode";
 
 @Component({
     selector: 'tabs-list',
@@ -138,7 +140,16 @@ export class TabsListComponent implements OnInit, OnChanges
         }
         catch (ex)
         {
-            alert("Can not get children! Error: " + ex);
+            if (ex.constructor.name === ServerException.name) // if (ex instanceof ServerException) - is not working here!
+            {
+                let serverException: ServerException = ex as ServerException;
+                let exceptionCode: ExceptionCode = serverException.code;
+
+                switch (exceptionCode)
+                {
+                    default: break;
+                }
+            }
         }
     }
 
@@ -157,16 +168,16 @@ export class TabsListComponent implements OnInit, OnChanges
             }
             catch (ex)
             {
-                // if (ex instanceof ServerException)
-                // {
-                //     switch (ex.code)
-                //     {
-                //         case ExceptionCode.NoPermission:
-                //             break;
-                //     }
-                // }
-                
-                alert("Can not add new tab! Error: " + ex);
+                if (ex.constructor.name === ServerException.name) // if (ex instanceof ServerException) - is not working here!
+                {
+                    let serverException: ServerException = ex as ServerException;
+                    let exceptionCode: ExceptionCode = serverException.code;
+
+                    switch (exceptionCode)
+                    {
+                        default: break;
+                    }
+                }
             }
         }
     }
@@ -205,9 +216,16 @@ export class TabsListComponent implements OnInit, OnChanges
             }
             catch (ex)
             {
-                if (ex == 401) alert("You have no permision to delete notes!");
-                else
-                    alert("Can not delete tab! Error: " + ex);
+                if (ex.constructor.name === ServerException.name) // if (ex instanceof ServerException) - is not working here!
+                {
+                    let serverException: ServerException = ex as ServerException;
+                    let exceptionCode: ExceptionCode = serverException.code;
+
+                    switch (exceptionCode)
+                    {
+                        default: break;
+                    }
+                }
             }
         }
     }
@@ -236,7 +254,7 @@ export class TabsListComponent implements OnInit, OnChanges
         this.RemoveTab(TabsListComponent.movingTab);
     }
 
-    private TabContextMenu_BindTabToParent($event): void
+    private async TabContextMenu_BindTabToParent($event): Promise<void>
     {
         if (TabsListComponent.movingTab != null)
         {
@@ -246,14 +264,13 @@ export class TabsListComponent implements OnInit, OnChanges
 
             TabsListComponent.movingTab.parentId = contextMenuTab.parentId;
 
-            this.UpdateTab(TabsListComponent.movingTab).then(() =>
-            {
-                this.Select(contextMenuTab);
-                this.tabs.push(TabsListComponent.movingTab);
-                this.Select(TabsListComponent.movingTab);
+            await this.UpdateTab(TabsListComponent.movingTab);
 
-                TabsListComponent.movingTab = null;
-            });
+            this.Select(contextMenuTab);
+            this.tabs.push(TabsListComponent.movingTab);
+            this.Select(TabsListComponent.movingTab);
+
+            TabsListComponent.movingTab = null;
         }
     }
 }

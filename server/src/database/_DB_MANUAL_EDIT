@@ -1,0 +1,8 @@
+Prevent user from deleting notes.
+ 
+    db.users.updateOne({ email: "demo" }, { $set: { 'claims.canDeleteNotes': false } } )
+
+
+Delete user.
+
+    db.users.remove({ email: "demo" }, true)

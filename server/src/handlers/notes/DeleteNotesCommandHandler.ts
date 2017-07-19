@@ -7,6 +7,8 @@ import { INotesRepo } from "../../repositories/INotesRepo";
 import { NotesRepo } from "../../repositories/NotesRepo";
 import { DeleteNotesCommand } from "../../messages/notes/DeleteNotesCommand";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
+import { Exception } from "../../exceptions/Exception";
+import { ExceptionCode } from "../../shared/errors/ExceptionCode";
 
 
 @AssignMessage(DeleteNotesCommand)
@@ -19,7 +21,7 @@ export class DeleteNotesCommandHandler implements IQueryHandler
     {
         if (!context.user.claims.canDeleteNotes)
         {
-    //        throw new UnathorizedException();
+            throw new Exception(ExceptionCode.NoPermission);
         }
 
         return await this._notes.Delete(command.id, context.user.id);
