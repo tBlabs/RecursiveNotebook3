@@ -8,7 +8,6 @@ import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import { Injectable } from '@angular/core';
 import { StorageService } from './../storage.service';
 import { TimeoutError } from "rxjs";
-import { Dupa } from "../Dupa";
 import { ServerException } from "../../shared/errors/errors";
 
 @Injectable()
@@ -79,13 +78,11 @@ export class CqrsBus
         {
             console.log('[CQRS Bus] ex:', ex);
 
-            // throw new ServerException();
-            //   if (1) throw new ServerException();
-
             if (ex instanceof TimeoutError) // We don't get here if server is disabled
             {
                 console.log("TIMEOUT");
                 this._snackService.Error("Connection timeout");
+
                 throw new ConnectionTimeoutException();
             }
             else if (ex instanceof Response)
@@ -102,8 +99,8 @@ export class CqrsBus
                     console.log('[CQRS.Send] ServerException: ', serverException);
                     this._snackService.Error(serverException.message);
 
-                   // throw new ServerException(serverException);
-                    throw serverException;
+                    throw new ServerException(serverException);
+                    //throw serverException;
                 }
             }
             else 

@@ -1,10 +1,4 @@
 "use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -46,17 +40,7 @@ var Database_1 = require("./../../database/Database");
 var NoteEntity_1 = require("./../../entities/NoteEntity");
 var NotesRepo_1 = require("./../../repositories/NotesRepo");
 var inversify_config_1 = require("../../inversify.config");
-var inversify_1 = require("inversify");
 require("reflect-metadata");
-var TestDatabaseConfig = (function () {
-    function TestDatabaseConfig() {
-        this.connectionString = 'mongodb://localhost:27017/test';
-    }
-    return TestDatabaseConfig;
-}());
-TestDatabaseConfig = __decorate([
-    inversify_1.injectable()
-], TestDatabaseConfig);
 function BuildNote(id, parentId) {
     var noteEntity = new NoteEntity_1.NoteEntity();
     noteEntity.id = id;
@@ -69,8 +53,6 @@ function BuildNote(id, parentId) {
 describe('NotesRepo', function () {
     var notesRepo = null;
     beforeEach(function () {
-        inversify_config_1.container.unbind("IDatabaseConfig");
-        inversify_config_1.container.bind("IDatabaseConfig").to(TestDatabaseConfig);
         var db = inversify_config_1.container.resolve(Database_1.Database);
         db.Clean('notes');
         notesRepo = new NotesRepo_1.NotesRepo(db);

@@ -8,9 +8,6 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -51,18 +48,18 @@ var inversify_1 = require("inversify");
 require("reflect-metadata");
 var mongodb_1 = require("mongodb");
 var Database = (function () {
-    function Database(config) {
-        this.connectionString = '';
+    function Database() {
+        this._connectionString = '';
         this._mongo = null;
         this._db = null;
         this._mongo = new mongodb_1.MongoClient();
-        this.connectionString = config.connectionString;
+        this._connectionString = process.env.MONGODB_URI;
     }
     Database.prototype.Connect = function () {
         return __awaiter(this, void 0, void 0, function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
-                    case 0: return [4, this._mongo.connect(this.connectionString)];
+                    case 0: return [4, this._mongo.connect(this._connectionString)];
                     case 1: return [2, _a.sent()];
                 }
             });
@@ -120,8 +117,7 @@ var Database = (function () {
 }());
 Database = __decorate([
     inversify_1.injectable(),
-    __param(0, inversify_1.inject('IDatabaseConfig')),
-    __metadata("design:paramtypes", [Object])
+    __metadata("design:paramtypes", [])
 ], Database);
 exports.Database = Database;
 //# sourceMappingURL=Database.js.map

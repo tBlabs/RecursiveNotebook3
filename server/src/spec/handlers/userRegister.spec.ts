@@ -6,7 +6,7 @@ import { Database } from "../../database/Database";
 import { container } from "../../inversify.config";
 
 
-describe('User Register Query Handler', () =>
+xdescribe('User Register Query Handler', () =>
 {
     let userRegisterQuery: UserRegisterQuery = null;
     let userRegisterQueryHandler: UserRegisterQueryHandler = null;

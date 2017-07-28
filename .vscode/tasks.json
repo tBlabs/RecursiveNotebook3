@@ -55,7 +55,7 @@
             "isShellCommand": true,
             "command": "jasmine",
             "args": [
-                "--config=src/spec/support/jasmine.json"
+                "--config=server/src/spec/support/jasmine.json"
             ],
             "showOutput": "always"
         },

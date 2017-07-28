@@ -19,6 +19,7 @@ exports.SERVER_EXCEPTIONS = [
     { code: ExceptionCode_1.ExceptionCode.NoPermission, message: "No permission", httpStatus: http_status_codes_1.UNAUTHORIZED },
     { code: ExceptionCode_1.ExceptionCode.InvalidUserEmail, message: "Invalid user email", httpStatus: http_status_codes_1.UNAUTHORIZED },
     { code: ExceptionCode_1.ExceptionCode.InvalidUserPassword, message: "Invalid user password", httpStatus: http_status_codes_1.UNAUTHORIZED },
-    { code: ExceptionCode_1.ExceptionCode.InvalidNoteTitle, message: "Invalid note title", httpStatus: http_status_codes_1.UNAUTHORIZED }
+    { code: ExceptionCode_1.ExceptionCode.InvalidNoteTitle, message: "Invalid note title", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: ExceptionCode_1.ExceptionCode.ValidationProblem, message: "Validation problem", httpStatus: http_status_codes_1.BAD_REQUEST }
 ];
 //# sourceMappingURL=errors.js.map

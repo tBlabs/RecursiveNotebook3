@@ -66,7 +66,8 @@ var LoginQueryHandler = (function () {
                     case 0: return [4, this._db.Open('users')];
                     case 1:
                         usersCollection = _a.sent();
-                        return [4, usersCollection.findOneAndUpdate({ email: query.email }, { $set: { lastLoginTime: new Date() } })];
+                        return [4, usersCollection.findOneAndUpdate({ email: query.email }, { $set: { lastLoginTime: new Date() }
+                            })];
                     case 2:
                         entry = _a.sent();
                         if ((entry.ok != 1) || (entry.value == null)) {

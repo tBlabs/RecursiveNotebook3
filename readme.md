@@ -11,33 +11,11 @@ must also be added to client package.json.
 Any changes in this structure 
 
 
-Few words about exceptions.
+#Sharded folder modification
 
-- there are to classes of exceptions:
-    - server exceptions (ServerException)
-        Which split into:
-        - HandlerException's
-        - CqrsBusException's
-        - other exceptions
-    - client exceptions (ClientException)
+Any change in /sharded requires client and server rebuild (npm run buildclient & npm run buildserver)
+to copy shared files to appropriate folders.
 
 
-
-HandlerException : ForClient
-
-
-IForClient
-- msg
-- httpStatus
-- xxx: code, type
-
-IForServer
-- logMsg
-
-Server
-CustomException : IForClient
-
-
-Client
-CustomException : IForServer
-
+#To improve
+- Database connections usage

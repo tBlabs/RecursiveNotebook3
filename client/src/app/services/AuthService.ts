@@ -1,4 +1,3 @@
-import { Dupa } from './Dupa';
 import { ServerException } from './../shared/errors/errors';
 import { CqrsBus } from './cqrs/CqrsBus';
 import { guid } from 'app/common/types';

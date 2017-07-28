@@ -48,8 +48,6 @@ var Cqrs_1 = require("./cqrs/Cqrs");
 require("reflect-metadata");
 var http_status_codes_1 = require("http-status-codes");
 var Exception_1 = require("./exceptions/Exception");
-console.log("ABC: " + process.env.ABC);
-console.log("X: " + process.env.PORT);
 var Startup = (function () {
     function Startup() {
     }
@@ -138,11 +136,6 @@ var Startup = (function () {
                             host.get('/test', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     console.log("/test GET hit!");
-                                    try {
-                                    }
-                                    catch (ex) {
-                                        console.log("bbbbbbbbb: ", ex);
-                                    }
                                     res.status(200).end("This is respond for /test hit.");
                                     return [2];
                                 });

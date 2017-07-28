@@ -10,4 +10,5 @@ export enum ExceptionCode
     InvalidUserEmail,
     InvalidUserPassword,
     InvalidNoteTitle,
+    ValidationProblem
 }

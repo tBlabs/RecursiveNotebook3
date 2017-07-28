@@ -2,16 +2,9 @@ import { Database } from './../../database/Database';
 import { NoteEntity } from './../../entities/NoteEntity';
 import { NotesRepo } from './../../repositories/NotesRepo';
 import { container } from "../../inversify.config";
-import { DatabaseConfig } from "../../database/DatabaseConfig";
 import { injectable } from 'inversify';
 import 'reflect-metadata';
 import { guid } from "../../types";
-
-@injectable()
-class TestDatabaseConfig implements IDatabaseConfig
-{
-    connectionString: string = 'mongodb://localhost:27017/test';
-}
 
 function BuildNote(id: guid, parentId: guid): NoteEntity
 {
@@ -33,9 +26,7 @@ describe('NotesRepo', () =>
     beforeEach(() =>
     {
         // Switch to 'test' database
-        container.unbind("IDatabaseConfig");
-        container.bind<IDatabaseConfig>("IDatabaseConfig").to(TestDatabaseConfig);
-
+   
         let db = container.resolve(Database);
         db.Clean('notes');
 

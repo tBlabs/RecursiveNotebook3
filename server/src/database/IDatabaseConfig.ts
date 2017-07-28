@@ -1,4 +1,0 @@
-interface IDatabaseConfig
-{
-    connectionString: string;
-}

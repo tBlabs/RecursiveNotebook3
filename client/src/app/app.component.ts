@@ -48,6 +48,6 @@ export class AppComponent
 
   Demo()
   {
-    this._auth.Login("demo", "demo");
+    this._auth.Login("demo@demo.com", "demo");
   }
 }

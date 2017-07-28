@@ -1,1 +1,1 @@
-{"version":3,"file":"UserRegisterQuery.js","sourceRoot":"","sources":["../../../src/messages/auth/UserRegisterQuery.ts"],"names":[],"mappings":";;AAAA;IAAA;IAIA,CAAC;IAAD,wBAAC;AAAD,CAAC,AAJD,IAIC;AAJY,8CAAiB"}
+{"version":3,"file":"UserRegisterQuery.js","sourceRoot":"","sources":["../../../src/messages/auth/UserRegisterQuery.ts"],"names":[],"mappings":";;;;;;;;;;;AAAA,gEAA4D;AAE5D;IAAA;IAaA,CAAC;IAAD,wBAAC;AAAD,CAAC,AAbD,IAaC;AAVG;IADC,oBAAO,EAAE;;gDACI;AAHL,8CAAiB"}

@@ -10,7 +10,7 @@ export class ServerException
 
     public constructor(init?: Partial<any>)
     {
-       Object.assign(this, init);
+        Object.assign(this, init);
     }
 }
 
@@ -25,5 +25,6 @@ export const SERVER_EXCEPTIONS: ServerException[] =
         { code: ExceptionCode.NoPermission, message: "No permission", httpStatus: UNAUTHORIZED },   
         { code: ExceptionCode.InvalidUserEmail, message: "Invalid user email", httpStatus: UNAUTHORIZED },
         { code: ExceptionCode.InvalidUserPassword, message: "Invalid user password", httpStatus: UNAUTHORIZED },
-        { code: ExceptionCode.InvalidNoteTitle, message: "Invalid note title", httpStatus: UNAUTHORIZED }
+        { code: ExceptionCode.InvalidNoteTitle, message: "Invalid note title", httpStatus: UNAUTHORIZED },
+        { code: ExceptionCode.ValidationProblem, message: "Validation problem", httpStatus: BAD_REQUEST }
     ];

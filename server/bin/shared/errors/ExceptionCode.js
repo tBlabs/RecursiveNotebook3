@@ -12,5 +12,6 @@ var ExceptionCode;
     ExceptionCode[ExceptionCode["InvalidUserEmail"] = 8] = "InvalidUserEmail";
     ExceptionCode[ExceptionCode["InvalidUserPassword"] = 9] = "InvalidUserPassword";
     ExceptionCode[ExceptionCode["InvalidNoteTitle"] = 10] = "InvalidNoteTitle";
+    ExceptionCode[ExceptionCode["ValidationProblem"] = 11] = "ValidationProblem";
 })(ExceptionCode = exports.ExceptionCode || (exports.ExceptionCode = {}));
 //# sourceMappingURL=ExceptionCode.js.map

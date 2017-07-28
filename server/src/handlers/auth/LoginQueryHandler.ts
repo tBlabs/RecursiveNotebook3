@@ -12,7 +12,7 @@ import { Validator } from "validator.ts/Validator";
 import { ValidationErrorInterface } from "validator.ts/ValidationErrorInterface";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
 import { ExceptionCode } from "../../shared/errors/ExceptionCode";
-import { FindAndModifyWriteOpResultObject } from "mongodb";
+import { FindAndModifyWriteOpResultObject, Collection } from "mongodb";
 
 @AssignMessage(LoginQuery)
 @injectable()
@@ -22,43 +22,28 @@ export class LoginQueryHandler implements IQueryHandler
 
     public async Handle(query: LoginQuery, context: Context): Promise<any>
     {
-      //  console.log("qqqqquery: "+JSON.stringify(query));
-
-    //    throw new HandlerException(Ex.WrongPassword);
-
-        
-        // let validator: Validator = new Validator();
+        // let validator: Validator = new Validator();//TODO: move to IoC
         // let errors: ValidationErrorInterface[] = validator.validate(query);
 
-        // if (errors) 
+        // if (errors.length != 0) 
         // {
-        //     let message = `Field "${ errors[0].errorName }" of value ${ errors[0].value } is wrong`;
+        //     console.log(errors);
+            
+        //     throw new Exception(ExceptionCode.ValidationProblem, errors);
 
-        //     // Throw only first error (not all) 
-        //     if (errors[0].errorName === 'email')
-        //     {
-            // try
-            // {
-           //     throw new HandlerException(Ex.InvalidUserEmail//, "PAYLOAD"
-           //    );void
-            // }
-            // catch (ex)
-            // {
-
-            // }
-        //     }
+        //     //     let message = `Field "${ errors[0].errorName }" of value ${ errors[0].value } is wrong`;
         // }
 
-        let usersCollection = await this._db.Open('users');
+        let usersCollection: Collection = await this._db.Open('users');
 
         let entry: FindAndModifyWriteOpResultObject = await usersCollection.findOneAndUpdate(
             { email: query.email },
-            { $set: { lastLoginTime: new Date() } }
-        );
+            { $set: { lastLoginTime: new Date() } 
+        });
 
         if ((entry.ok != 1) || (entry.value == null))
         {
-            throw new Exception(ExceptionCode.UserNotExists);       
+            throw new Exception(ExceptionCode.UserNotExists);
         }
 
         let userEntity: UserEntity = entry.value;

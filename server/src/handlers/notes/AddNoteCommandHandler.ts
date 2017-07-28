@@ -28,7 +28,7 @@ export class AddNoteCommandHandler implements IQueryHandler
         note.parentId = command.parentId;
         note.userId = context.user.id;
         note.title = command.title;
-        note.content = ''; // Without it 'content' field will not be added to database (this will result with 'undefined' test in content field during rendering)
+        note.content = ''; // Without 'content' field will not be added to database (this will result with 'undefined' test in content field during rendering)
 
         return await this._notes.Add(note);
     }

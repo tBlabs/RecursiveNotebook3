@@ -6,19 +6,19 @@ import { MongoClient, Collection, MongoError, Db } from 'mongodb';
 @injectable()
 export class Database
 {
-    private connectionString: string = '';
+    private _connectionString: string = '';
     private _mongo: MongoClient = null;
     private _db: Db = null;
 
-    constructor( @inject('IDatabaseConfig') config: IDatabaseConfig) 
+    constructor() 
     {
         this._mongo = new MongoClient();
-        this.connectionString = config.connectionString;
+        this._connectionString = process.env.MONGODB_URI;
     }
 
     private async Connect(): Promise<Db>
     {
-        return await this._mongo.connect(this.connectionString);
+        return await this._mongo.connect(this._connectionString);
     }
 
     public async Clean(collection: string): Promise<void>

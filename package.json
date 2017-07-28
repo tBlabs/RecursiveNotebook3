@@ -21,7 +21,7 @@
     "buildandrunserver": "npm run buildserver && npm run runserver",
     "deploy": "git push heroku master && heroku logs --tail",
     "fastdeploy": "npm run buildall && git add . && git commit -m \"fast deploy\" && npm run deploy",
-    "testserver": "npm run buildserver && jasmine --config=./server/src/spec/support/jasmine.json"
+    "testserver": "clear && npm run buildserver && jasmine --config=./server/src/spec/support/jasmine.json"
   },
   "author": "tB",
   "license": "freeBeer",

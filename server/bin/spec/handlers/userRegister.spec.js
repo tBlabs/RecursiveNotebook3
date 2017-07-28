@@ -42,7 +42,7 @@ var UserRegisterQueryHandler_1 = require("./../../handlers/auth/UserRegisterQuer
 var UserRegisterQuery_1 = require("../../messages/auth/UserRegisterQuery");
 var Database_1 = require("../../database/Database");
 var inversify_config_1 = require("../../inversify.config");
-describe('User Register Query Handler', function () {
+xdescribe('User Register Query Handler', function () {
     var userRegisterQuery = null;
     var userRegisterQueryHandler = null;
     var database = null;

@@ -35,6 +35,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var Validator_1 = require("validator.ts/Validator");
 var inversify_config_1 = require("../inversify.config");
 var Exception_1 = require("../exceptions/Exception");
 var ExceptionCode_1 = require("../shared/errors/ExceptionCode");
@@ -42,23 +43,23 @@ var Cqrs = (function () {
     function Cqrs() {
     }
     Cqrs.PrintMessagesHandlers = function () {
-        console.log("Handlers: ", this.messageHandlers);
+        console.log("Handlers: ", this._messageHandlers);
     };
     Cqrs.RegisterMessageHandler = function (name, klass) {
-        this.messageHandlers[name] = klass;
+        this._messageHandlers[name] = klass;
         inversify_config_1.container.bind(klass).toSelf();
     };
-    Cqrs.ResolveMessageHandler = function (name) {
-        var messageName = Object.keys(this.messageHandlers).find(function (i) { return i === name; });
-        if (messageName === undefined) {
-            console.log("Can not find handler for message \"" + name + "\"");
+    Cqrs.ResolveMessageHandler = function (messageName) {
+        var msgName = Object.keys(this._messageHandlers).find(function (i) { return i === messageName; });
+        if (msgName === undefined) {
+            console.log("Can not find handler for message \"" + messageName + "\"");
             throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.CanNotResolveMessageHandler);
         }
-        return inversify_config_1.container.get(this.messageHandlers[messageName]);
+        return inversify_config_1.container.get(this._messageHandlers[msgName]);
     };
     Cqrs.Execute = function (messagePackage, context) {
         return __awaiter(this, void 0, void 0, function () {
-            var messageName, messageBody, messageHandler;
+            var messageName, messageBody, validator, errors, messageHandler;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -66,6 +67,14 @@ var Cqrs = (function () {
                         messageBody = messagePackage[messageName];
                         console.log("Handling " + messageName + "...");
                         console.log('with message:', messageBody);
+                        validator = new Validator_1.Validator();
+                        errors = validator.validate(messageBody);
+                        if (errors.length != 0) {
+                            console.log('Validation errors:', errors);
+                            throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.ValidationProblem, errors);
+                        }
+                        else
+                            console.log();
                         messageHandler = this.ResolveMessageHandler(messageName);
                         return [4, messageHandler.Handle(messageBody, context)];
                     case 1: return [2, _a.sent()];
@@ -75,6 +84,6 @@ var Cqrs = (function () {
     };
     return Cqrs;
 }());
-Cqrs.messageHandlers = {};
+Cqrs._messageHandlers = {};
 exports.Cqrs = Cqrs;
 //# sourceMappingURL=Cqrs.js.map
