@@ -38,54 +38,10 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var LoginQuery_1 = require("./../../messages/auth/LoginQuery");
 var LoginQueryHandler_1 = require("./../../handlers/auth/LoginQueryHandler");
-var Exception_1 = require("../../exceptions/Exception");
 var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
-var object = {
-    doSomething: function (v) {
-        throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.ValidationProblem);
-    }
-};
-var XXX = (function () {
-    function XXX() {
-    }
-    XXX.prototype.YYY = function (x) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                if (1)
-                    throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.ValidationProblem);
-                return [2];
-            });
-        });
-    };
-    return XXX;
-}());
-describe('toThrow', function () {
-    it('checks that the expected exception was thrown by the actual', function (done) {
-        return __awaiter(this, void 0, void 0, function () {
-            var xxx, ex_1;
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        _a.trys.push([0, 2, , 3]);
-                        xxx = new XXX();
-                        return [4, xxx.YYY("asdf")];
-                    case 1:
-                        _a.sent();
-                        return [3, 3];
-                    case 2:
-                        ex_1 = _a.sent();
-                        expect(ex_1.code).toBe(ExceptionCode_1.ExceptionCode.ValidationProblem);
-                        done();
-                        return [3, 3];
-                    case 3: return [2];
-                }
-            });
-        });
-    });
-});
 describe('LoginQueryHandler', function () {
     it('should fail on invalid input', function (done) { return __awaiter(_this, void 0, void 0, function () {
-        var loginQuery, loginQueryHandler, ex_2;
+        var loginQuery, loginQueryHandler, ex_1;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -101,8 +57,8 @@ describe('LoginQueryHandler', function () {
                     _a.sent();
                     return [3, 4];
                 case 3:
-                    ex_2 = _a.sent();
-                    expect(ex_2.code).toBe(ExceptionCode_1.ExceptionCode.ValidationProblem);
+                    ex_1 = _a.sent();
+                    expect(ex_1.code).toBe(ExceptionCode_1.ExceptionCode.ValidationProblem);
                     done();
                     return [3, 4];
                 case 4: return [2];
@@ -110,7 +66,7 @@ describe('LoginQueryHandler', function () {
         });
     }); });
     it('should pass on valid input', function (done) { return __awaiter(_this, void 0, void 0, function () {
-        var loginQuery, loginQueryHandler, ex_3;
+        var loginQuery, loginQueryHandler, ex_2;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
@@ -128,7 +84,7 @@ describe('LoginQueryHandler', function () {
                     done();
                     return [3, 4];
                 case 3:
-                    ex_3 = _a.sent();
+                    ex_2 = _a.sent();
                     return [3, 4];
                 case 4: return [2];
             }

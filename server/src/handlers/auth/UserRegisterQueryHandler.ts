@@ -5,7 +5,7 @@ import { Database } from "../../database/Database";
 import { UserRegisterQuery } from "../../messages/auth/UserRegisterQuery";
 import { UserEntity } from "../../entities/UserEntity";
 import { v4 as RandomGuid } from 'uuid';
-import { Auth } from "../../services/auth";
+import { AuthService } from "../../services/AuthService";
 import { User } from "../../framework/User";
 import { AssignMessageToMessageHandler } from "../../decorators/AssignMessageToMessageHandler";
 import { Claims } from "../../framework/Claims";
@@ -17,7 +17,7 @@ import { Exception } from "../../exceptions/Exception";
 @injectable()
 export class UserRegisterQueryHandler implements IQueryHandler
 {
-    constructor(private _db: Database, private _auth: Auth) { }
+    constructor(private _db: Database, private _auth: AuthService) { }
 
     public async Handle(query: UserRegisterQuery, context: Context): Promise<any>
     {

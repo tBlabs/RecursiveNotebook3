@@ -4,7 +4,7 @@ import { injectable, Container } from 'inversify';
 import 'reflect-metadata';
 import { Context } from "../../framework/Context";
 import { Database } from "../../database/Database";
-import { Auth } from "../../services/auth";
+import { AuthService } from "../../services/AuthService";
 import { User } from "../../framework/User";
 import { LoginQuery } from "../../messages/auth/LoginQuery";
 import { AssignMessageToMessageHandler } from "../../decorators/AssignMessageToMessageHandler";
@@ -18,7 +18,7 @@ import { FindAndModifyWriteOpResultObject, Collection } from "mongodb";
 @injectable()
 export class LoginQueryHandler implements IQueryHandler
 {
-    constructor(private _db: Database, private _auth: Auth) { }
+    constructor(private _db: Database, private _auth: AuthService) { }
 
     public async Handle(query: LoginQuery, context: Context): Promise<any>
     {

@@ -3,36 +3,7 @@ import { LoginQueryHandler } from './../../handlers/auth/LoginQueryHandler';
 import { Exception } from "../../exceptions/Exception";
 import { ExceptionCode } from "../../shared/errors/ExceptionCode";
 
-var object = {
-    doSomething: function (v)
-    {
-        throw new Exception(ExceptionCode.ValidationProblem);
-    }
-};
-class XXX
-{
-    async YYY(x: string): Promise<void>
-    {
-        if (1) throw new Exception(ExceptionCode.ValidationProblem);
-    }
-}
 
-describe('toThrow', function ()
-{
-    it('checks that the expected exception was thrown by the actual', async function (done)
-    {
-        try
-        {
-            let xxx = new XXX();
-            await xxx.YYY("asdf");
-        }
-        catch (ex)
-        {
-            expect(ex.code).toBe(ExceptionCode.ValidationProblem);
-            done();
-        }
-    });
-});
 describe('LoginQueryHandler', () =>
 {
     it('should fail on invalid input', async (done) =>

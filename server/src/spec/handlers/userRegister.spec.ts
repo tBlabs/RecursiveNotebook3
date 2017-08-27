@@ -1,5 +1,5 @@
 import { Context } from './../../framework/Context';
-import { Auth } from './../../services/auth';
+import { AuthService } from './../../services/AuthService';
 import { UserRegisterQueryHandler } from './../../handlers/auth/UserRegisterQueryHandler';
 import { UserRegisterQuery } from "../../messages/auth/UserRegisterQuery";
 import { Database } from "../../database/Database";
@@ -11,13 +11,13 @@ xdescribe('User Register Query Handler', () =>
     let userRegisterQuery: UserRegisterQuery = null;
     let userRegisterQueryHandler: UserRegisterQueryHandler = null;
     let database: Database = null;
-    let auth: Auth = null;
+    let auth: AuthService = null;
     let context: Context = null;
 
     beforeEach(() =>
     {
         database = container.resolve(Database);
-        auth = new Auth();
+        auth = new AuthService();
         userRegisterQuery = new UserRegisterQuery();
         userRegisterQueryHandler = new UserRegisterQueryHandler(database, auth);
         context = new Context();

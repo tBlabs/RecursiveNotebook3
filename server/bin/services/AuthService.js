@@ -35,4 +35,4 @@ AuthService = __decorate([
     inversify_1.injectable()
 ], AuthService);
 exports.AuthService = AuthService;
-//# sourceMappingURL=auth.js.map
+//# sourceMappingURL=AuthService.js.map

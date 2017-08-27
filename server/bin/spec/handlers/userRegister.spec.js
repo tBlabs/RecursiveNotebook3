@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 var Context_1 = require("./../../framework/Context");
-var auth_1 = require("./../../services/auth");
+var AuthService_1 = require("./../../services/AuthService");
 var UserRegisterQueryHandler_1 = require("./../../handlers/auth/UserRegisterQueryHandler");
 var UserRegisterQuery_1 = require("../../messages/auth/UserRegisterQuery");
 var Database_1 = require("../../database/Database");
@@ -50,7 +50,7 @@ xdescribe('User Register Query Handler', function () {
     var context = null;
     beforeEach(function () {
         database = inversify_config_1.container.resolve(Database_1.Database);
-        auth = new auth_1.Auth();
+        auth = new AuthService_1.AuthService();
         userRegisterQuery = new UserRegisterQuery_1.UserRegisterQuery();
         userRegisterQueryHandler = new UserRegisterQueryHandler_1.UserRegisterQueryHandler(database, auth);
         context = new Context_1.Context();

@@ -48,7 +48,7 @@ var Exception_1 = require("./../../exceptions/Exception");
 var inversify_1 = require("inversify");
 require("reflect-metadata");
 var Database_1 = require("../../database/Database");
-var auth_1 = require("../../services/auth");
+var AuthService_1 = require("../../services/AuthService");
 var User_1 = require("../../framework/User");
 var LoginQuery_1 = require("../../messages/auth/LoginQuery");
 var AssignMessageToMessageHandler_1 = require("../../decorators/AssignMessageToMessageHandler");
@@ -91,7 +91,7 @@ var LoginQueryHandler = (function () {
 LoginQueryHandler = __decorate([
     AssignMessageToMessageHandler_1.AssignMessageToMessageHandler(LoginQuery_1.LoginQuery),
     inversify_1.injectable(),
-    __metadata("design:paramtypes", [Database_1.Database, auth_1.Auth])
+    __metadata("design:paramtypes", [Database_1.Database, AuthService_1.AuthService])
 ], LoginQueryHandler);
 exports.LoginQueryHandler = LoginQueryHandler;
 //# sourceMappingURL=LoginQueryHandler.js.map

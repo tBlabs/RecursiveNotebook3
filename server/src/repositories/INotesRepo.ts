@@ -1,6 +1,6 @@
 import { guid } from "../types";
 import { NoteEntity } from "../entities/NoteEntity";
-import { NoteDto } from "../dataTransferObjects/noteDto";
+import { NoteDto } from "../dataTransferObjects/NoteDto";
 
 export interface INotesRepo
 {

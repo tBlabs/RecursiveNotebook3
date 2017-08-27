@@ -1,13 +1,13 @@
 /// <reference path="../../../node_modules/@types/jasmine/index.d.ts" />
 
-import { Auth } from "../services/auth";
+import { AuthService } from "../services/AuthService";
 import { guid } from "../types";
 import { User } from "../framework/User";
 import { Claims } from "../framework/Claims";
 
 xdescribe('auth service', () =>
 {
-    let auth: Auth = new Auth();
+    let auth: AuthService = new AuthService();
     let guid: guid = "12341234-1234-1234-1234-123412341234";
 
     it('should generate JWT token', () =>

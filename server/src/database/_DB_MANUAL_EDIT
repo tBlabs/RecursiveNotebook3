@@ -6,3 +6,24 @@ Prevent user from deleting notes.
 Delete user.
 
     db.users.remove({ email: "demo" }, true)
+
+
+Open mongo console from command line.
+
+    Write 'mongo' in new terminal window.
+
+
+Show databases/collections.
+
+    show dbs
+    show collections
+
+
+Switch to database.
+
+    use {db name}
+
+
+Show collection.
+
+    db.{collection name}.find()

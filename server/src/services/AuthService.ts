@@ -5,26 +5,11 @@ import { v4 } from 'uuid';
 import { decode, encode } from 'jwt-simple';
 import { guid } from "../types";
 import { Claims } from "../framework/Claims";
+import { Payload } from "./Payload";
 
-export class Payload
-{
-    userId: guid;
-    userClaims: Claims;
-
-    random: guid;
-    creationTime: Date;
-    expirationTime: Date;
-
-    constructor()
-    {
-        this.random = v4();
-        this.creationTime = new Date();
-        this.expirationTime = new Date();
-    }
-}
 
 @injectable()
-export class Auth
+export class AuthService
 {
     private secret = "kjlvsakjlfwopnt45kjfddsvbjksadfljgdlsfkjgdsklfjg";
 

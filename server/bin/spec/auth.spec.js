@@ -1,10 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var auth_1 = require("../services/auth");
+var AuthService_1 = require("../services/AuthService");
 var User_1 = require("../framework/User");
 var Claims_1 = require("../framework/Claims");
 xdescribe('auth service', function () {
-    var auth = new auth_1.Auth();
+    var auth = new AuthService_1.AuthService();
     var guid = "12341234-1234-1234-1234-123412341234";
     it('should generate JWT token', function () {
         var user = new User_1.User();

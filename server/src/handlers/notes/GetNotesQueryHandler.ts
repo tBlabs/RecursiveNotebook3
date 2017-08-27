@@ -4,7 +4,7 @@ import { Context } from "../../framework/Context";
 import { GetNotesQuery } from "../../messages/notes/GetNotesQuery";
 import { AssignMessageToMessageHandler } from "../../decorators/AssignMessageToMessageHandler";
 import { INotesRepo } from "../../repositories/INotesRepo";
-import { NoteDto } from "../../dataTransferObjects/noteDto";
+import { NoteDto } from "../../dataTransferObjects/NoteDto";
 import { NotesRepo } from "../../repositories/NotesRepo";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
 
