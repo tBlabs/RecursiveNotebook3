@@ -11,7 +11,8 @@ var ServerException = (function () {
 exports.ServerException = ServerException;
 exports.SERVER_EXCEPTIONS = [
     { code: ExceptionCode_1.ExceptionCode.UnhandledException, message: "Unhandled exception", httpStatus: http_status_codes_1.INTERNAL_SERVER_ERROR },
-    { code: ExceptionCode_1.ExceptionCode.CanNotResolveMessageHandler, message: "Unrecognized message", httpStatus: http_status_codes_1.BAD_REQUEST },
+    { code: ExceptionCode_1.ExceptionCode.CanNotResolveMessage, message: "Unknown message", httpStatus: http_status_codes_1.BAD_REQUEST },
+    { code: ExceptionCode_1.ExceptionCode.CanNotResolveMessageHandler, message: "No handler for message", httpStatus: http_status_codes_1.BAD_REQUEST },
     { code: ExceptionCode_1.ExceptionCode.Unauthorized, message: "Unauthorized", httpStatus: http_status_codes_1.UNAUTHORIZED },
     { code: ExceptionCode_1.ExceptionCode.WrongPassword, message: "Wrong password", httpStatus: http_status_codes_1.UNAUTHORIZED },
     { code: ExceptionCode_1.ExceptionCode.EmailTaken, message: "Email taken", httpStatus: http_status_codes_1.UNAUTHORIZED },

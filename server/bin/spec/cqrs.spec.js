@@ -1,16 +1,3 @@
-"use strict";
-var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
-    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
-    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
-    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
-    return c > 3 && r && Object.defineProperty(target, key, r), r;
-};
-var __metadata = (this && this.__metadata) || function (k, v) {
-    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
-};
-var __param = (this && this.__param) || function (paramIndex, decorator) {
-    return function (target, key) { decorator(target, key, paramIndex); }
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -46,35 +33,14 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-var inversify_1 = require("inversify");
-require("reflect-metadata");
-var GetNotesQuery_1 = require("../../messages/notes/GetNotesQuery");
-var AssignMessageToMessageHandler_1 = require("../../decorators/AssignMessageToMessageHandler");
-var GetNotesQueryHandler = (function () {
-    function GetNotesQueryHandler(_notes) {
-        this._notes = _notes;
-    }
-    GetNotesQueryHandler.prototype.Handle = function (query, context) {
-        return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        if (!context.user.claims.canReadNote) {
-                        }
-                        return [4, this._notes.GetChildren(query.parentId, context.user.id)];
-                    case 1: return [2, _a.sent()];
-                }
-            });
+var _this = this;
+describe('CQRS', function () {
+    it('should pass throug valid message', function () { return __awaiter(_this, void 0, void 0, function () {
+        var messageAsText;
+        return __generator(this, function (_a) {
+            messageAsText = '{ "Command": { "foo": "bar@bar.pl" } }';
+            return [2];
         });
-    };
-    return GetNotesQueryHandler;
-}());
-GetNotesQueryHandler = __decorate([
-    AssignMessageToMessageHandler_1.AssignMessageToMessageHandler(GetNotesQuery_1.GetNotesQuery),
-    inversify_1.injectable(),
-    __param(0, inversify_1.inject("INotesRepo")),
-    __metadata("design:paramtypes", [Object])
-], GetNotesQueryHandler);
-exports.GetNotesQueryHandler = GetNotesQueryHandler;
-//# sourceMappingURL=GetNotesQueryHandler.js.map
+    }); });
+});
+//# sourceMappingURL=cqrs.spec.js.map

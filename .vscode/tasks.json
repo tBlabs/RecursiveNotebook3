@@ -38,12 +38,25 @@
         },
         {
             "taskName": "build",
-            "isBuildCommand": true,
+            "isBuildCommand": false,
             "isShellCommand": true,
             "command": "npm",
             "args": [
                 "run",
                 "buildserver"
+            ],
+            "showOutput": "always",
+            "problemMatcher": "$tsc",
+            "echoCommand": true
+        },
+        {
+            "taskName": "buildandrunserver",
+            "isBuildCommand": true,
+            "isShellCommand": true,
+            "command": "npm",
+            "args": [
+                "run",
+                "buildandrunserver"
             ],
             "showOutput": "always",
             "problemMatcher": "$tsc",

@@ -51,7 +51,7 @@ var inversify_1 = require("inversify");
 require("reflect-metadata");
 var NoteEntity_1 = require("../../entities/NoteEntity");
 var AddNoteCommand_1 = require("../../messages/notes/AddNoteCommand");
-var AssignMessage_1 = require("../../decorators/AssignMessage");
+var AssignMessageToMessageHandler_1 = require("../../decorators/AssignMessageToMessageHandler");
 var Exception_1 = require("../../exceptions/Exception");
 var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
 var AddNoteCommandHandler = (function () {
@@ -82,7 +82,7 @@ var AddNoteCommandHandler = (function () {
     return AddNoteCommandHandler;
 }());
 AddNoteCommandHandler = __decorate([
-    AssignMessage_1.AssignMessage(AddNoteCommand_1.AddNoteCommand),
+    AssignMessageToMessageHandler_1.AssignMessageToMessageHandler(AddNoteCommand_1.AddNoteCommand),
     inversify_1.injectable(),
     __param(0, inversify_1.inject("INotesRepo")),
     __metadata("design:paramtypes", [Object])

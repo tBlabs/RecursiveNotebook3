@@ -17,7 +17,8 @@ export class ServerException
 export const SERVER_EXCEPTIONS: ServerException[] =
     [
         { code: ExceptionCode.UnhandledException, message: "Unhandled exception", httpStatus: INTERNAL_SERVER_ERROR },
-        { code: ExceptionCode.CanNotResolveMessageHandler, message: "Unrecognized message", httpStatus: BAD_REQUEST },
+        { code: ExceptionCode.CanNotResolveMessage, message: "Unknown message", httpStatus: BAD_REQUEST },
+        { code: ExceptionCode.CanNotResolveMessageHandler, message: "No handler for message", httpStatus: BAD_REQUEST },
         { code: ExceptionCode.Unauthorized, message: "Unauthorized", httpStatus: UNAUTHORIZED },
         { code: ExceptionCode.WrongPassword, message: "Wrong password", httpStatus: UNAUTHORIZED },
         { code: ExceptionCode.EmailTaken, message: "Email taken", httpStatus: UNAUTHORIZED },

@@ -9,7 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var inversify_1 = require("inversify");
 var Validation_1 = require("validator.ts/decorator/Validation");
+var AddToMessagesProvider_1 = require("../../decorators/AddToMessagesProvider");
 var UserRegisterQuery = (function () {
     function UserRegisterQuery() {
     }
@@ -19,5 +21,13 @@ __decorate([
     Validation_1.IsEmail(),
     __metadata("design:type", String)
 ], UserRegisterQuery.prototype, "email", void 0);
+__decorate([
+    Validation_1.MinLength(3),
+    __metadata("design:type", String)
+], UserRegisterQuery.prototype, "password", void 0);
+UserRegisterQuery = __decorate([
+    AddToMessagesProvider_1.AddToMessagesProvider(),
+    inversify_1.injectable()
+], UserRegisterQuery);
 exports.UserRegisterQuery = UserRegisterQuery;
 //# sourceMappingURL=UserRegisterQuery.js.map

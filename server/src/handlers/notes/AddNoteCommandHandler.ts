@@ -3,14 +3,14 @@ import 'reflect-metadata';
 import { Context } from "../../framework/Context";
 import { NoteEntity } from "../../entities/NoteEntity";
 import { AddNoteCommand } from "../../messages/notes/AddNoteCommand";
-import { AssignMessage } from "../../decorators/AssignMessage";
+import { AssignMessageToMessageHandler } from "../../decorators/AssignMessageToMessageHandler";
 import { INotesRepo } from "../../repositories/INotesRepo";
 import { NotesRepo } from "../../repositories/NotesRepo";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
 import { Exception } from "../../exceptions/Exception";
 import { ExceptionCode } from "../../shared/errors/ExceptionCode";
 
-@AssignMessage(AddNoteCommand)
+@AssignMessageToMessageHandler(AddNoteCommand)
 @injectable()
 export class AddNoteCommandHandler implements IQueryHandler
 {

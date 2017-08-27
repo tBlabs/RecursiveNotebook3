@@ -51,7 +51,7 @@ var Database_1 = require("../../database/Database");
 var auth_1 = require("../../services/auth");
 var User_1 = require("../../framework/User");
 var LoginQuery_1 = require("../../messages/auth/LoginQuery");
-var AssignMessage_1 = require("../../decorators/AssignMessage");
+var AssignMessageToMessageHandler_1 = require("../../decorators/AssignMessageToMessageHandler");
 var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
 var LoginQueryHandler = (function () {
     function LoginQueryHandler(_db, _auth) {
@@ -89,7 +89,7 @@ var LoginQueryHandler = (function () {
     return LoginQueryHandler;
 }());
 LoginQueryHandler = __decorate([
-    AssignMessage_1.AssignMessage(LoginQuery_1.LoginQuery),
+    AssignMessageToMessageHandler_1.AssignMessageToMessageHandler(LoginQuery_1.LoginQuery),
     inversify_1.injectable(),
     __metadata("design:paramtypes", [Database_1.Database, auth_1.Auth])
 ], LoginQueryHandler);

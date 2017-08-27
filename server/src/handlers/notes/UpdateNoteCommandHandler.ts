@@ -2,7 +2,7 @@ import { injectable, Container, inject } from 'inversify';
 import 'reflect-metadata';
 import { Context } from "../../framework/Context";
 import { NoteEntity } from "../../entities/NoteEntity";
-import { AssignMessage } from "../../decorators/AssignMessage";
+import { AssignMessageToMessageHandler } from "../../decorators/AssignMessageToMessageHandler";
 import { INotesRepo } from "../../repositories/INotesRepo";
 import { NotesRepo } from "../../repositories/NotesRepo";
 import { UpdateNoteCommand } from "../../messages/notes/UpdateNoteCommand";
@@ -11,7 +11,7 @@ import { ExceptionCode } from "../../shared/errors/ExceptionCode";
 import { Exception } from "../../exceptions/Exception";
 
 
-@AssignMessage(UpdateNoteCommand)
+@AssignMessageToMessageHandler(UpdateNoteCommand)
 @injectable()
 export class UpdateNoteCommandHandler implements ICommandHandler
 {

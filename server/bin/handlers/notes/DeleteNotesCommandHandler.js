@@ -49,7 +49,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = require("inversify");
 require("reflect-metadata");
-var AssignMessage_1 = require("../../decorators/AssignMessage");
+var AssignMessageToMessageHandler_1 = require("../../decorators/AssignMessageToMessageHandler");
 var DeleteNotesCommand_1 = require("../../messages/notes/DeleteNotesCommand");
 var Exception_1 = require("../../exceptions/Exception");
 var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
@@ -74,7 +74,7 @@ var DeleteNotesCommandHandler = (function () {
     return DeleteNotesCommandHandler;
 }());
 DeleteNotesCommandHandler = __decorate([
-    AssignMessage_1.AssignMessage(DeleteNotesCommand_1.DeleteNotesCommand),
+    AssignMessageToMessageHandler_1.AssignMessageToMessageHandler(DeleteNotesCommand_1.DeleteNotesCommand),
     inversify_1.injectable(),
     __param(0, inversify_1.inject("INotesRepo")),
     __metadata("design:paramtypes", [Object])

@@ -7,13 +7,13 @@ import { UserEntity } from "../../entities/UserEntity";
 import { v4 as RandomGuid } from 'uuid';
 import { Auth } from "../../services/auth";
 import { User } from "../../framework/User";
-import { AssignMessage } from "../../decorators/AssignMessage";
+import { AssignMessageToMessageHandler } from "../../decorators/AssignMessageToMessageHandler";
 import { Claims } from "../../framework/Claims";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
 import { ExceptionCode } from "../../shared/errors/ExceptionCode";
 import { Exception } from "../../exceptions/Exception";
 
-@AssignMessage(UserRegisterQuery)
+@AssignMessageToMessageHandler(UserRegisterQuery)
 @injectable()
 export class UserRegisterQueryHandler implements IQueryHandler
 {

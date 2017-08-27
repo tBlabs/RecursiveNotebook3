@@ -2,13 +2,13 @@ import { injectable, Container, inject } from 'inversify';
 import 'reflect-metadata';
 import { Context } from "../../framework/Context";
 import { GetNotesQuery } from "../../messages/notes/GetNotesQuery";
-import { AssignMessage } from "../../decorators/AssignMessage";
+import { AssignMessageToMessageHandler } from "../../decorators/AssignMessageToMessageHandler";
 import { INotesRepo } from "../../repositories/INotesRepo";
 import { NoteDto } from "../../dataTransferObjects/noteDto";
 import { NotesRepo } from "../../repositories/NotesRepo";
 import { IQueryHandler } from "../../cqrs/IQueryHandler";
 
-@AssignMessage(GetNotesQuery)
+@AssignMessageToMessageHandler(GetNotesQuery)
 @injectable()
 export class GetNotesQueryHandler implements IQueryHandler
 {

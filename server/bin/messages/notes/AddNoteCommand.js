@@ -9,7 +9,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var inversify_1 = require("inversify");
 var Validation_1 = require("validator.ts/decorator/Validation");
+var AddToMessagesProvider_1 = require("../../decorators/AddToMessagesProvider");
 var AddNoteCommand = (function () {
     function AddNoteCommand() {
     }
@@ -23,5 +25,13 @@ __decorate([
     Validation_1.IsUUID(),
     __metadata("design:type", String)
 ], AddNoteCommand.prototype, "parentId", void 0);
+__decorate([
+    Validation_1.NotEmpty(),
+    __metadata("design:type", String)
+], AddNoteCommand.prototype, "title", void 0);
+AddNoteCommand = __decorate([
+    AddToMessagesProvider_1.AddToMessagesProvider(),
+    inversify_1.injectable()
+], AddNoteCommand);
 exports.AddNoteCommand = AddNoteCommand;
 //# sourceMappingURL=AddNoteCommand.js.map

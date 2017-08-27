@@ -1,6 +1,7 @@
 export enum ExceptionCode
 {
     UnhandledException = 1,
+    CanNotResolveMessage,
     CanNotResolveMessageHandler,
     Unauthorized,
     WrongPassword,

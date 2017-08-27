@@ -1,3 +1,4 @@
+import { GetNotesQuery } from './../messages/notes/GetNotesQuery';
 import { Validator } from 'validator.ts/Validator';
 import { LoginQueryHandler } from './../handlers/auth/LoginQueryHandler';
 import { ICommandHandler } from './ICommandHandler';
@@ -9,17 +10,39 @@ import { ValidationErrorInterface } from "validator.ts/ValidationErrorInterface"
 
 export class Cqrs
 {
+    private static _messages = {};
     private static _messageHandlers = {};
 
-    public static PrintMessagesHandlers()
+    public static PrintMessagesAndTheirHandlers() 
     {
+        console.log("Messages: ", this._messages);
         console.log("Handlers: ", this._messageHandlers);
+    }
+
+    public static RegisterMessage(name: string, klass: any)
+    {
+        this._messages[name] = klass;
+        container.bind(klass).toSelf();
     }
 
     public static RegisterMessageHandler(name: string, klass: any)
     {
         this._messageHandlers[name] = klass; // collection['messageName'] = messageClass
         container.bind(klass).toSelf();
+    }
+
+    public static ResolveMessage(messageName): any
+    {
+        let msgName = Object.keys(this._messages).find(i => i === messageName);
+
+        if (msgName === undefined) 
+        {
+            console.log(`Can not find message "${ messageName }"`);
+
+            throw new Exception(ExceptionCode.CanNotResolveMessage);
+        }
+
+        return container.get(this._messages[msgName]);
     }
 
     public static ResolveMessageHandler(messageName): any
@@ -29,40 +52,45 @@ export class Cqrs
         if (msgName === undefined) 
         {
             console.log(`Can not find handler for message "${ messageName }"`);
-            
-            throw new Exception(ExceptionCode.CanNotResolveMessageHandler); 
+
+            throw new Exception(ExceptionCode.CanNotResolveMessageHandler);
         }
-        
+
         return container.get(this._messageHandlers[msgName]);
     }
 
-    public static async Execute(messagePackage: any, context: Context): Promise<any>
+    public static async Execute(messagePackage: Object, context: Context): Promise<any>
     {
-        let messageName = Object.keys(messagePackage)[0]; // First key is a message class name
-        let messageBody = messagePackage[messageName]; // Value of first key is message class body/properties
+        let messageName: string = Object.keys(messagePackage)[0]; // First key is a message class name
+        let messageBody: Object = messagePackage[messageName]; // Value of first key is message class body/properties
 
         console.log("Handling " + messageName + "...");
-        console.log('with message:', messageBody);
+        console.log('with body:', messageBody);
 
+        let message: any = this.ResolveMessage(messageName);
+
+        // Copy oryginal message props to resolved message
+        for (var property in messageBody)
+        {
+            message[property] = messageBody[property];
+        }
+
+        // Validation
         let validator: Validator = new Validator();//TODO: move to IoC
-        let errors: ValidationErrorInterface[] = validator.validate(messageBody);
-
-        
+        let errors: ValidationErrorInterface[] = validator.validate(message);
 
         if (errors.length != 0) 
         {
             console.log('Validation errors:', errors);
 
-            throw new Exception(ExceptionCode.ValidationProblem, errors);
-
-            //     let message = `Field "${ errors[0].errorName }" of value ${ errors[0].value } is wrong`;
+            throw new Exception(ExceptionCode.ValidationProblem);
         }
-        else console.log();
-        
-
-        let messageHandler: any = this.ResolveMessageHandler(messageName);
-
-        return await messageHandler.Handle(messageBody, context);
+        else
+        {
+            let messageHandler: any = this.ResolveMessageHandler(messageName);
+    
+            return await messageHandler.Handle(message, context);
+        }
     }
 }
 

@@ -42,12 +42,25 @@ var ExceptionCode_1 = require("../shared/errors/ExceptionCode");
 var Cqrs = (function () {
     function Cqrs() {
     }
-    Cqrs.PrintMessagesHandlers = function () {
+    Cqrs.PrintMessagesAndTheirHandlers = function () {
+        console.log("Messages: ", this._messages);
         console.log("Handlers: ", this._messageHandlers);
+    };
+    Cqrs.RegisterMessage = function (name, klass) {
+        this._messages[name] = klass;
+        inversify_config_1.container.bind(klass).toSelf();
     };
     Cqrs.RegisterMessageHandler = function (name, klass) {
         this._messageHandlers[name] = klass;
         inversify_config_1.container.bind(klass).toSelf();
+    };
+    Cqrs.ResolveMessage = function (messageName) {
+        var msgName = Object.keys(this._messages).find(function (i) { return i === messageName; });
+        if (msgName === undefined) {
+            console.log("Can not find message \"" + messageName + "\"");
+            throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.CanNotResolveMessage);
+        }
+        return inversify_config_1.container.get(this._messages[msgName]);
     };
     Cqrs.ResolveMessageHandler = function (messageName) {
         var msgName = Object.keys(this._messageHandlers).find(function (i) { return i === messageName; });
@@ -59,31 +72,34 @@ var Cqrs = (function () {
     };
     Cqrs.Execute = function (messagePackage, context) {
         return __awaiter(this, void 0, void 0, function () {
-            var messageName, messageBody, validator, errors, messageHandler;
+            var messageName, messageBody, message, property, validator, errors, messageHandler;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         messageName = Object.keys(messagePackage)[0];
                         messageBody = messagePackage[messageName];
                         console.log("Handling " + messageName + "...");
-                        console.log('with message:', messageBody);
-                        validator = new Validator_1.Validator();
-                        errors = validator.validate(messageBody);
-                        if (errors.length != 0) {
-                            console.log('Validation errors:', errors);
-                            throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.ValidationProblem, errors);
+                        console.log('with body:', messageBody);
+                        message = this.ResolveMessage(messageName);
+                        for (property in messageBody) {
+                            message[property] = messageBody[property];
                         }
-                        else
-                            console.log();
+                        validator = new Validator_1.Validator();
+                        errors = validator.validate(message);
+                        if (!(errors.length != 0)) return [3, 1];
+                        console.log('Validation errors:', errors);
+                        throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.ValidationProblem);
+                    case 1:
                         messageHandler = this.ResolveMessageHandler(messageName);
-                        return [4, messageHandler.Handle(messageBody, context)];
-                    case 1: return [2, _a.sent()];
+                        return [4, messageHandler.Handle(message, context)];
+                    case 2: return [2, _a.sent()];
                 }
             });
         });
     };
     return Cqrs;
 }());
+Cqrs._messages = {};
 Cqrs._messageHandlers = {};
 exports.Cqrs = Cqrs;
 //# sourceMappingURL=Cqrs.js.map

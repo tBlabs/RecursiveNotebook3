@@ -1,6 +1,10 @@
+import { injectable } from 'inversify';
 import { guid } from "../../types";
-import { IsUUID } from "validator.ts/decorator/Validation";
+import { IsUUID, NotEmpty } from "validator.ts/decorator/Validation";
+import { AddToMessagesProvider } from "../../decorators/AddToMessagesProvider";
 
+@AddToMessagesProvider()
+@injectable()
 export class AddNoteCommand
 {
     @IsUUID()
@@ -9,5 +13,6 @@ export class AddNoteCommand
     @IsUUID()
     public parentId: guid;
 
+    @NotEmpty()
     public title: string;
 }

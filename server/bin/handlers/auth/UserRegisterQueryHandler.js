@@ -52,7 +52,7 @@ var UserEntity_1 = require("../../entities/UserEntity");
 var uuid_1 = require("uuid");
 var auth_1 = require("../../services/auth");
 var User_1 = require("../../framework/User");
-var AssignMessage_1 = require("../../decorators/AssignMessage");
+var AssignMessageToMessageHandler_1 = require("../../decorators/AssignMessageToMessageHandler");
 var Claims_1 = require("../../framework/Claims");
 var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
 var Exception_1 = require("../../exceptions/Exception");
@@ -105,7 +105,7 @@ var UserRegisterQueryHandler = (function () {
     return UserRegisterQueryHandler;
 }());
 UserRegisterQueryHandler = __decorate([
-    AssignMessage_1.AssignMessage(UserRegisterQuery_1.UserRegisterQuery),
+    AssignMessageToMessageHandler_1.AssignMessageToMessageHandler(UserRegisterQuery_1.UserRegisterQuery),
     inversify_1.injectable(),
     __metadata("design:paramtypes", [Database_1.Database, auth_1.Auth])
 ], UserRegisterQueryHandler);

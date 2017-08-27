@@ -1,0 +1,1 @@
+{"version":3,"file":"AssignMessageToMessageHandler.js","sourceRoot":"","sources":["../../src/decorators/AssignMessageToMessageHandler.ts"],"names":[],"mappings":";;AAKA,qCAAoC;AAEpC,uCAA8C,YAAiB;IAE3D,MAAM,CAAC,UAAU,mBAAmB;QAEhC,WAAI,CAAC,sBAAsB,CAAC,YAAY,CAAC,IAAI,EAAE,mBAAmB,CAAC,CAAC;IACxE,CAAC,CAAA;AACL,CAAC;AAND,sEAMC"}

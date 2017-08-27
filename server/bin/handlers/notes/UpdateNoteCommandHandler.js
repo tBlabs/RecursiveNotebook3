@@ -50,7 +50,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var inversify_1 = require("inversify");
 require("reflect-metadata");
 var NoteEntity_1 = require("../../entities/NoteEntity");
-var AssignMessage_1 = require("../../decorators/AssignMessage");
+var AssignMessageToMessageHandler_1 = require("../../decorators/AssignMessageToMessageHandler");
 var UpdateNoteCommand_1 = require("../../messages/notes/UpdateNoteCommand");
 var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
 var Exception_1 = require("../../exceptions/Exception");
@@ -82,7 +82,7 @@ var UpdateNoteCommandHandler = (function () {
     return UpdateNoteCommandHandler;
 }());
 UpdateNoteCommandHandler = __decorate([
-    AssignMessage_1.AssignMessage(UpdateNoteCommand_1.UpdateNoteCommand),
+    AssignMessageToMessageHandler_1.AssignMessageToMessageHandler(UpdateNoteCommand_1.UpdateNoteCommand),
     inversify_1.injectable(),
     __param(0, inversify_1.inject("INotesRepo")),
     __metadata("design:paramtypes", [Object])
