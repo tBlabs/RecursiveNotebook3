@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
+var Exception_1 = require("./exceptions/Exception");
 var errors_1 = require("./shared/errors/errors");
 var ExceptionCode_1 = require("./shared/errors/ExceptionCode");
 var AuthService_1 = require("./services/AuthService");
@@ -45,9 +46,7 @@ var express = require("express");
 var bodyParser = require("body-parser");
 var inversify_config_1 = require("./inversify.config");
 var Cqrs_1 = require("./cqrs/Cqrs");
-require("reflect-metadata");
 var http_status_codes_1 = require("http-status-codes");
-var Exception_1 = require("./exceptions/Exception");
 var Startup = (function () {
     function Startup() {
     }
@@ -101,6 +100,7 @@ var Startup = (function () {
             var host, port_1;
             return __generator(this, function (_a) {
                 console.log("*** START ***");
+                Cqrs_1.Cqrs.PrintMessagesAndTheirHandlers();
                 {
                     host = express();
                     host.use(bodyParser.json());

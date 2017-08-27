@@ -43,8 +43,8 @@ var Cqrs = (function () {
     function Cqrs() {
     }
     Cqrs.PrintMessagesAndTheirHandlers = function () {
-        console.log("Messages: ", this._messages);
-        console.log("Handlers: ", this._messageHandlers);
+        console.log("Messages:", Object.keys(this._messages).toString());
+        console.log("Handlers:", this._messageHandlers);
     };
     Cqrs.RegisterMessage = function (name, klass) {
         this._messages[name] = klass;

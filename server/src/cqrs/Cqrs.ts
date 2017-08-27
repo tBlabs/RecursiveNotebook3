@@ -15,8 +15,8 @@ export class Cqrs
 
     public static PrintMessagesAndTheirHandlers() 
     {
-        console.log("Messages: ", this._messages);
-        console.log("Handlers: ", this._messageHandlers);
+        console.log("Messages:", Object.keys(this._messages).toString());
+        console.log("Handlers:", this._messageHandlers);
     }
 
     public static RegisterMessage(name: string, klass: any)
