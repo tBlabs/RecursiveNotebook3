@@ -36,6 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
+var inversify_config_1 = require("./inversify.config");
 var Exception_1 = require("./exceptions/Exception");
 var errors_1 = require("./shared/errors/errors");
 var ExceptionCode_1 = require("./shared/errors/ExceptionCode");
@@ -44,7 +45,6 @@ var Context_1 = require("./framework/Context");
 require("./handlers");
 var express = require("express");
 var bodyParser = require("body-parser");
-var inversify_config_1 = require("./inversify.config");
 var Cqrs_1 = require("./cqrs/Cqrs");
 var http_status_codes_1 = require("http-status-codes");
 var Startup = (function () {
@@ -52,7 +52,7 @@ var Startup = (function () {
     }
     Startup.HandleCqrsBus = function (request, respond) {
         return __awaiter(this, void 0, void 0, function () {
-            var context, authorizationHeader, authService, user, result, ex_1, serverException, exception_1;
+            var context, authorizationHeader, authService, user, cqrs, result, ex_1, serverException, exception_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -72,7 +72,9 @@ var Startup = (function () {
                     case 1:
                         _a.trys.push([1, 3, , 4]);
                         console.log('----------------------------------------------');
-                        return [4, Cqrs_1.Cqrs.Execute(request.body, context)];
+                        cqrs = inversify_config_1.container.get(Cqrs_1.Cqrs);
+                        cqrs.PrintMessagesAndTheirHandlers();
+                        return [4, cqrs.Execute(request.body, context)];
                     case 2:
                         result = _a.sent();
                         console.log('Handler result:', result);
@@ -97,33 +99,30 @@ var Startup = (function () {
     Startup.Start = function () {
         return __awaiter(this, void 0, void 0, function () {
             var _this = this;
-            var host, port_1;
+            var host, port;
             return __generator(this, function (_a) {
                 console.log("*** START ***");
-                Cqrs_1.Cqrs.PrintMessagesAndTheirHandlers();
-                {
-                    host = express();
-                    host.use(bodyParser.json());
-                    host.all('/*', function (req, res, next) {
-                        res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-                        res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
-                        res.header("Access-Control-Allow-Methods", "POST");
-                        next();
+                host = express();
+                host.use(bodyParser.json());
+                host.all('/*', function (req, res, next) {
+                    res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+                    res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+                    res.header("Access-Control-Allow-Methods", "POST");
+                    next();
+                });
+                host.use(express.static(__dirname + '/../../client/dist'));
+                host.get('/test', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
+                    return __generator(this, function (_a) {
+                        console.log("/test GET hit!");
+                        res.status(http_status_codes_1.OK).end("This is respond at /test hit.");
+                        return [2];
                     });
-                    host.use(express.static(__dirname + '/../../client/dist'));
-                    host.get('/test', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
-                        return __generator(this, function (_a) {
-                            console.log("/test GET hit!");
-                            res.status(http_status_codes_1.OK).end("This is respond at /test hit.");
-                            return [2];
-                        });
-                    }); });
-                    host.post('/api/cqrsbus', function (req, res) {
-                        _this.HandleCqrsBus(req, res);
-                    });
-                    port_1 = process.env.PORT;
-                    host.listen(port_1, function () { return console.log('SERVER STARTED @' + port_1); });
-                }
+                }); });
+                host.post('/api/cqrsbus', function (req, res) {
+                    _this.HandleCqrsBus(req, res);
+                });
+                port = process.env.PORT;
+                host.listen(port, function () { return console.log('SERVER STARTED @' + port); });
                 return [2];
             });
         });

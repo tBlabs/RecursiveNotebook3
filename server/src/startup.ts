@@ -1,5 +1,7 @@
 require('dotenv').config(); // Loads variables from '.env' file to process.env
 
+import { container } from "./inversify.config"; // This must be before handlers import (messages and handlers uses decorators which uses container)
+
 import { Exception } from "./exceptions/Exception";
 import { ServerException } from "./shared/errors/errors";
 import { SERVER_EXCEPTIONS } from './shared/errors/errors';
@@ -9,7 +11,6 @@ import { Context } from './framework/Context';
 import './handlers'; // This import is required here (in app entry point) because of necessity of call AssignMessage for every handler class
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
-import { container } from "./inversify.config";
 import { User } from "./framework/User";
 import { Claims } from "./framework/Claims";
 import { Cqrs } from "./cqrs/Cqrs";
@@ -44,7 +45,9 @@ class Startup
         {
             console.log('----------------------------------------------');
 
-            let result = await Cqrs.Execute(request.body, context);
+            let cqrs: Cqrs = container.get(Cqrs);
+            cqrs.PrintMessagesAndTheirHandlers();
+            let result = await cqrs.Execute(request.body, context);
 
             console.log('Handler result:', result);
 
@@ -72,38 +75,34 @@ class Startup
     {
         console.log("*** START ***");
 
-        Cqrs.PrintMessagesAndTheirHandlers();
-        //  if (0)
+        let host = express();
+
+        host.use(bodyParser.json());
+
+        host.all('/*', function (req, res, next)
         {
-            let host = express();
+            res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+            res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
+            res.header("Access-Control-Allow-Methods", "POST");
+            next();
+        });
 
-            host.use(bodyParser.json());
-            // host.use(cors());
-            host.all('/*', function (req, res, next)
-            {
-                res.header("Access-Control-Allow-Origin", "http://localhost:4200");
-                res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
-                res.header("Access-Control-Allow-Methods", "POST");
-                next();
-            });
+        host.use(express.static(__dirname + '/../../client/dist'));
 
-            host.use(express.static(__dirname + '/../../client/dist'));
+        host.get('/test', async (req, res) =>
+        {
+            console.log("/test GET hit!");
 
-            host.get('/test', async (req, res) =>
-            {
-                console.log("/test GET hit!");
+            res.status(OK).end("This is respond at /test hit.");
+        });
 
-                res.status(OK).end("This is respond at /test hit.");
-            });
+        host.post('/api/cqrsbus', (req, res) =>
+        {
+            this.HandleCqrsBus(req, res);
+        });
 
-            host.post('/api/cqrsbus', (req, res) =>
-            {
-                this.HandleCqrsBus(req, res);
-            });
-
-            let port = process.env.PORT;
-            host.listen(port, () => console.log('SERVER STARTED @' + port));
-        }
+        let port = process.env.PORT;
+        host.listen(port, () => console.log('SERVER STARTED @' + port));
     }
 }
 

@@ -16,8 +16,6 @@ export class Database
 
     private async Connect(): Promise<Db>
     {
-        console.log('connection string:', process.env.MONGODB_URI);
-        
         this._db = await this._mongo.connect(process.env.MONGODB_URI);
 
         return this._db;

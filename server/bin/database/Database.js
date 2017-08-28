@@ -59,7 +59,6 @@ var Database = (function () {
             return __generator(this, function (_b) {
                 switch (_b.label) {
                     case 0:
-                        console.log('connection string:', process.env.MONGODB_URI);
                         _a = this;
                         return [4, this._mongo.connect(process.env.MONGODB_URI)];
                     case 1:

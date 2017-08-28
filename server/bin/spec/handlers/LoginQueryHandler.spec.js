@@ -38,62 +38,43 @@ var _this = this;
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 var ExceptionCode_1 = require("../../shared/errors/ExceptionCode");
-var Cqrs_1 = require("../../cqrs/Cqrs");
 fdescribe('LoginQuery', function () { return __awaiter(_this, void 0, void 0, function () {
     var _this = this;
     return __generator(this, function (_a) {
         it('should throw exception on non existing user', function (done) { return __awaiter(_this, void 0, void 0, function () {
-            var message, requestBodyAsObject, result, ex_1, exception;
+            var message, requestBodyAsObject, exception;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        message = '{ "LoginQuery": { "email": "non_existing_user@test.com", "password": "validPassword" } }';
-                        requestBodyAsObject = JSON.parse(message);
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4, Cqrs_1.Cqrs.Execute(requestBodyAsObject, null)];
-                    case 2:
-                        result = _a.sent();
-                        expect(true).toBeFalsy();
-                        console.log("SHOULD NEVER GET HERE UNLESS non_existing_user@test.com EXISTS IN DATABASE!");
-                        done();
-                        return [3, 4];
-                    case 3:
-                        ex_1 = _a.sent();
-                        exception = ex_1;
-                        expect(exception.code).toBe(ExceptionCode_1.ExceptionCode.UserNotExists);
-                        done();
-                        return [3, 4];
-                    case 4: return [2];
+                message = '{ "LoginQuery": { "email": "non_existing_user@test.com", "password": "validPassword" } }';
+                requestBodyAsObject = JSON.parse(message);
+                try {
+                    expect(true).toBeFalsy();
+                    console.log("SHOULD NEVER GET HERE UNLESS non_existing_user@test.com EXISTS IN DATABASE!");
+                    done();
                 }
+                catch (ex) {
+                    exception = ex;
+                    expect(exception.code).toBe(ExceptionCode_1.ExceptionCode.UserNotExists);
+                    done();
+                }
+                return [2];
             });
         }); });
         it('should pass', function (done) { return __awaiter(_this, void 0, void 0, function () {
-            var message, requestBodyAsObject, result, ex_2, exception;
+            var message, requestBodyAsObject, exception;
             return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0:
-                        message = '{ "LoginQuery": { "email": "non_existing_user@test.com", "password": "validPassword" } }';
-                        requestBodyAsObject = JSON.parse(message);
-                        _a.label = 1;
-                    case 1:
-                        _a.trys.push([1, 3, , 4]);
-                        return [4, Cqrs_1.Cqrs.Execute(requestBodyAsObject, null)];
-                    case 2:
-                        result = _a.sent();
-                        expect(true).toBeFalsy();
-                        console.log("SHOULD NEVER GET HERE UNLESS non_existing_user@test.com EXISTS IN DATABASE!");
-                        done();
-                        return [3, 4];
-                    case 3:
-                        ex_2 = _a.sent();
-                        exception = ex_2;
-                        expect(exception.code).toBe(ExceptionCode_1.ExceptionCode.UserNotExists);
-                        done();
-                        return [3, 4];
-                    case 4: return [2];
+                message = '{ "LoginQuery": { "email": "non_existing_user@test.com", "password": "validPassword" } }';
+                requestBodyAsObject = JSON.parse(message);
+                try {
+                    expect(true).toBeFalsy();
+                    console.log("SHOULD NEVER GET HERE UNLESS non_existing_user@test.com EXISTS IN DATABASE!");
+                    done();
                 }
+                catch (ex) {
+                    exception = ex;
+                    expect(exception.code).toBe(ExceptionCode_1.ExceptionCode.UserNotExists);
+                    done();
+                }
+                return [2];
             });
         }); });
         return [2];

@@ -1,4 +1,10 @@
 "use strict";
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -35,27 +41,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+var inversify_1 = require("inversify");
+require("reflect-metadata");
 var Validator_1 = require("validator.ts/Validator");
 var inversify_config_1 = require("../inversify.config");
 var Exception_1 = require("../exceptions/Exception");
 var ExceptionCode_1 = require("../shared/errors/ExceptionCode");
 var Cqrs = (function () {
     function Cqrs() {
-        console.log("CQRS class created");
+        this._messages = {};
+        this._messageHandlers = {};
     }
-    Cqrs.PrintMessagesAndTheirHandlers = function () {
+    Cqrs.prototype.PrintMessagesAndTheirHandlers = function () {
         console.log("Messages:", Object.keys(this._messages).toString());
         console.log("Handlers:", this._messageHandlers);
     };
-    Cqrs.RegisterMessage = function (name, klass) {
+    Cqrs.prototype.RegisterMessage = function (name, klass) {
         this._messages[name] = klass;
         inversify_config_1.container.bind(klass).toSelf();
     };
-    Cqrs.RegisterMessageHandler = function (name, klass) {
+    Cqrs.prototype.RegisterMessageHandler = function (name, klass) {
         this._messageHandlers[name] = klass;
         inversify_config_1.container.bind(klass).toSelf();
     };
-    Cqrs.ResolveMessage = function (messageName) {
+    Cqrs.prototype.ResolveMessage = function (messageName) {
         var msgName = Object.keys(this._messages).find(function (i) { return i === messageName; });
         if (msgName === undefined) {
             console.log("Can not find message \"" + messageName + "\"");
@@ -63,7 +72,7 @@ var Cqrs = (function () {
         }
         return inversify_config_1.container.get(this._messages[msgName]);
     };
-    Cqrs.ResolveMessageHandler = function (messageName) {
+    Cqrs.prototype.ResolveMessageHandler = function (messageName) {
         var msgName = Object.keys(this._messageHandlers).find(function (i) { return i === messageName; });
         if (msgName === undefined) {
             console.log("Can not find handler for message \"" + messageName + "\"");
@@ -71,13 +80,13 @@ var Cqrs = (function () {
         }
         return inversify_config_1.container.get(this._messageHandlers[msgName]);
     };
-    Cqrs.MixMessages = function (target, source) {
+    Cqrs.prototype.MixMessages = function (target, source) {
         for (var p in source) {
             target[p] = source[p];
         }
         return target;
     };
-    Cqrs.Execute = function (messagePackage, context) {
+    Cqrs.prototype.Execute = function (messagePackage, context) {
         return __awaiter(this, void 0, void 0, function () {
             var messageName, messageBody, resolvedMessage, message, validator, errors, messageHandler;
             return __generator(this, function (_a) {
@@ -88,7 +97,7 @@ var Cqrs = (function () {
                         console.log("Handling " + messageName + "...");
                         console.log('with body:', messageBody);
                         resolvedMessage = this.ResolveMessage(messageName);
-                        message = Cqrs.MixMessages(resolvedMessage, messageBody);
+                        message = this.MixMessages(resolvedMessage, messageBody);
                         validator = new Validator_1.Validator();
                         errors = validator.validate(message);
                         if (errors.length != 0) {
@@ -104,7 +113,8 @@ var Cqrs = (function () {
     };
     return Cqrs;
 }());
-Cqrs._messages = {};
-Cqrs._messageHandlers = {};
+Cqrs = __decorate([
+    inversify_1.injectable()
+], Cqrs);
 exports.Cqrs = Cqrs;
 //# sourceMappingURL=Cqrs.js.map

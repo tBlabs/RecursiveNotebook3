@@ -1,6 +1,6 @@
-import { GetNotesQuery } from './../messages/notes/GetNotesQuery';
+import { injectable } from "inversify";
+import 'reflect-metadata';
 import { Validator } from 'validator.ts/Validator';
-import { LoginQueryHandler } from './../handlers/auth/LoginQueryHandler';
 import { ICommandHandler } from './ICommandHandler';
 import { container } from "../inversify.config";
 import { Context } from "../framework/Context";
@@ -8,30 +8,32 @@ import { Exception } from "../exceptions/Exception";
 import { ExceptionCode } from "../shared/errors/ExceptionCode";
 import { ValidationErrorInterface } from "validator.ts/ValidationErrorInterface";
 
+
+@injectable()
 export class Cqrs
 {
-    private static _messages = {};
-    private static _messageHandlers = {};
+    private _messages = {};
+    private _messageHandlers = {};
 
-    public static PrintMessagesAndTheirHandlers() 
+    public PrintMessagesAndTheirHandlers() 
     {
         console.log("Messages:", Object.keys(this._messages).toString());
         console.log("Handlers:", this._messageHandlers);
     }
 
-    public static RegisterMessage(name: string, klass: any)
+    public RegisterMessage(name: string, klass: any)
     {
         this._messages[name] = klass;
         container.bind(klass).toSelf();
     }
 
-    public static RegisterMessageHandler(name: string, klass: any)
+    public RegisterMessageHandler(name: string, klass: any)
     {
         this._messageHandlers[name] = klass; // collection['messageName'] = messageClass
         container.bind(klass).toSelf();
     }
 
-    public static ResolveMessage(messageName): any
+    public ResolveMessage(messageName): any
     {
         let msgName = Object.keys(this._messages).find(i => i === messageName);
 
@@ -45,7 +47,7 @@ export class Cqrs
         return container.get(this._messages[msgName]);
     }
 
-    public static ResolveMessageHandler(messageName): any
+    public ResolveMessageHandler(messageName): any
     {
         let msgName = Object.keys(this._messageHandlers).find(i => i === messageName);
 
@@ -59,7 +61,7 @@ export class Cqrs
         return container.get(this._messageHandlers[msgName]);
     }
 
-    public static MixMessages(target: Object, source: Object): Object
+    public MixMessages(target: Object, source: Object): Object
     {
         for (let p in source)
         {
@@ -69,7 +71,7 @@ export class Cqrs
         return target;
     }
 
-    public static async Execute(messagePackage: Object, context: Context): Promise<any>
+    public async Execute(messagePackage: Object, context: Context): Promise<any>
     {
         let messageName: string = Object.keys(messagePackage)[0]; // First key is a message class name
         let messageBody: Object = messagePackage[messageName]; // Value of first key is message class body/properties
@@ -78,7 +80,7 @@ export class Cqrs
         console.log('with body:', messageBody);
 
         let resolvedMessage: any = this.ResolveMessage(messageName);
-        let message: Object = Cqrs.MixMessages(resolvedMessage, messageBody); // Copy oryginal message props to resolved message
+        let message: Object = this.MixMessages(resolvedMessage, messageBody); // Copy oryginal message props to resolved message
 
         // Validation
         let validator: Validator = new Validator(); // TODO: move to IoC

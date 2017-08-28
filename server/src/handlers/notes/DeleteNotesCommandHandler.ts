@@ -1,4 +1,4 @@
-import { injectable, Container, inject } from 'inversify';
+import { injectable, inject } from 'inversify';
 import 'reflect-metadata';
 import { Context } from "../../framework/Context";
 import { NoteEntity } from "../../entities/NoteEntity";

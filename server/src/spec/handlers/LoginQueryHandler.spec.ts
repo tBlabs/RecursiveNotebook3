@@ -17,7 +17,7 @@ fdescribe('LoginQuery', async () =>
 
         try
         {
-            let result = await Cqrs.Execute(requestBodyAsObject, null);
+       //     let result = await Cqrs.Execute(requestBodyAsObject, null);
 
             expect(true).toBeFalsy();
 
@@ -45,7 +45,7 @@ fdescribe('LoginQuery', async () =>
 
         try
         {
-            let result = await Cqrs.Execute(requestBodyAsObject, null);
+        //    let result = await Cqrs.Execute(requestBodyAsObject, null);
 
             expect(true).toBeFalsy();
 
