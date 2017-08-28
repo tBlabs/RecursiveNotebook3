@@ -49,31 +49,34 @@ require("reflect-metadata");
 var mongodb_1 = require("mongodb");
 var Database = (function () {
     function Database() {
-        this._connectionString = '';
         this._mongo = null;
         this._db = null;
         this._mongo = new mongodb_1.MongoClient();
-        this._connectionString = process.env.MONGODB_URI;
     }
     Database.prototype.Connect = function () {
         return __awaiter(this, void 0, void 0, function () {
-            return __generator(this, function (_a) {
-                switch (_a.label) {
-                    case 0: return [4, this._mongo.connect(this._connectionString)];
-                    case 1: return [2, _a.sent()];
+            var _a;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        console.log('connection string:', process.env.MONGODB_URI);
+                        _a = this;
+                        return [4, this._mongo.connect(process.env.MONGODB_URI)];
+                    case 1:
+                        _a._db = _b.sent();
+                        return [2, this._db];
                 }
             });
         });
     };
     Database.prototype.Clean = function (collection) {
         return __awaiter(this, void 0, void 0, function () {
-            var db;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0: return [4, this.Connect()];
                     case 1:
-                        db = _a.sent();
-                        return [4, db.collection(collection).drop()];
+                        _a.sent();
+                        return [4, this._db.collection(collection).drop()];
                     case 2: return [2, _a.sent()];
                 }
             });
@@ -81,19 +84,19 @@ var Database = (function () {
     };
     Database.prototype.Open = function (collection) {
         return __awaiter(this, void 0, void 0, function () {
-            var db, error_1;
+            var error_1;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 3, , 4]);
                         return [4, this.Connect()];
                     case 1:
-                        db = _a.sent();
-                        return [4, db.collection(collection)];
+                        _a.sent();
+                        return [4, this._db.collection(collection)];
                     case 2: return [2, _a.sent()];
                     case 3:
                         error_1 = _a.sent();
-                        console.log("Collection open exception: ", error_1);
+                        console.log("MongoDb collection open exception: ", error_1);
                         throw error_1;
                     case 4: return [2];
                 }

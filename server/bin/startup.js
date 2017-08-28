@@ -114,7 +114,7 @@ var Startup = (function () {
                     host.get('/test', function (req, res) { return __awaiter(_this, void 0, void 0, function () {
                         return __generator(this, function (_a) {
                             console.log("/test GET hit!");
-                            res.status(200).end("This is respond at /test hit.");
+                            res.status(http_status_codes_1.OK).end("This is respond at /test hit.");
                             return [2];
                         });
                     }); });

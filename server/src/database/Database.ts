@@ -6,39 +6,41 @@ import { MongoClient, Collection, MongoError, Db } from 'mongodb';
 @injectable()
 export class Database
 {
-    private _connectionString: string = '';
     private _mongo: MongoClient = null;
     private _db: Db = null;
 
     constructor() 
     {
         this._mongo = new MongoClient();
-        this._connectionString = process.env.MONGODB_URI;
     }
 
     private async Connect(): Promise<Db>
     {
-        return await this._mongo.connect(this._connectionString);
+        console.log('connection string:', process.env.MONGODB_URI);
+        
+        this._db = await this._mongo.connect(process.env.MONGODB_URI);
+
+        return this._db;
     }
 
     public async Clean(collection: string): Promise<void>
     {
-        let db = await this.Connect();
+        await this.Connect();
 
-        return await db.collection(collection).drop();
+        return await this._db.collection(collection).drop();
     }
 
     public async Open(collection: string): Promise<Collection>
     {
         try
         {
-            let db = await this.Connect();
+            await this.Connect();
 
-            return await db.collection(collection);
+            return await this._db.collection(collection);
         }
         catch (error)
         {
-            console.log("Collection open exception: ", error);
+            console.log("MongoDb collection open exception: ", error);
 
             throw error;
         }

@@ -20,11 +20,6 @@ class Startup
 {
     public static async HandleCqrsBus(request, respond)
     {
-        // TODO: Why this is not working?!?!?!
-        // res.header('Access-Control-Allow-Origin', '*');
-        // res.header('Access-Control-Allow-Methods', 'POST');
-        // res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-
         let context: Context = new Context();
 
         try
@@ -47,19 +42,13 @@ class Startup
 
         try
         {
-            // let m: string = '{ "LoginQuery": { "email": "tB", "password": "pass" } }';
-            // let result = await Cqrs.Execute(JSON.parse(m), context);
-            // console.log('Handler result:', result);
-
             console.log('----------------------------------------------');
-
 
             let result = await Cqrs.Execute(request.body, context);
 
             console.log('Handler result:', result);
 
             respond.status(OK).send(result);
-
         }
         catch (ex)
         {
@@ -82,8 +71,8 @@ class Startup
     public static async Start(): Promise<void>
     {
         console.log("*** START ***");
-      
-          Cqrs.PrintMessagesAndTheirHandlers();
+
+        Cqrs.PrintMessagesAndTheirHandlers();
         //  if (0)
         {
             let host = express();
@@ -98,14 +87,13 @@ class Startup
                 next();
             });
 
-
             host.use(express.static(__dirname + '/../../client/dist'));
 
             host.get('/test', async (req, res) =>
             {
                 console.log("/test GET hit!");
 
-                res.status(200).end("This is respond at /test hit.");
+                res.status(OK).end("This is respond at /test hit.");
             });
 
             host.post('/api/cqrsbus', (req, res) =>

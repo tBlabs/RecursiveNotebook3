@@ -26,8 +26,8 @@ export class LoginQueryHandler implements IQueryHandler
 
         let entry: FindAndModifyWriteOpResultObject = await usersCollection.findOneAndUpdate(
             { email: query.email },
-            { $set: { lastLoginTime: new Date() } 
-        });
+            { $set: { lastLoginTime: new Date() } }
+        );
 
         if ((entry.ok != 1) || (entry.value == null))
         {

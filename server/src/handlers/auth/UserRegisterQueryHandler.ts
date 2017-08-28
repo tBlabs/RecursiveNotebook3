@@ -24,24 +24,15 @@ export class UserRegisterQueryHandler implements IQueryHandler
         let collection = null;
 
         let item = null;
-        // try
-        // {
-             collection = await this._db.Open('users');
 
-             item = await collection.findOne({ email: query.email });
-         //   console.log('item:',item);
-            
-            if (item)
-            {
-                throw new Exception(ExceptionCode.EmailTaken);
-            }
-        // }
-        // catch (ex)
-        // {
-        //   //  console.log(ex);
-            
-        // }
-       
+        collection = await this._db.Open('users');
+
+        item = await collection.findOne({ email: query.email });
+
+        if (item)
+        {
+            throw new Exception(ExceptionCode.EmailTaken);
+        }
 
         let newUserClaims = new Claims();
         newUserClaims.canAddNote = true;

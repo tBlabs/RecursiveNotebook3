@@ -59,6 +59,16 @@ export class Cqrs
         return container.get(this._messageHandlers[msgName]);
     }
 
+    public static MixMessages(target: Object, source: Object): Object
+    {
+        for (let p in source)
+        {
+            target[p] = source[p];
+        }
+
+        return target;
+    }
+
     public static async Execute(messagePackage: Object, context: Context): Promise<any>
     {
         let messageName: string = Object.keys(messagePackage)[0]; // First key is a message class name
@@ -67,30 +77,23 @@ export class Cqrs
         console.log("Handling " + messageName + "...");
         console.log('with body:', messageBody);
 
-        let message: any = this.ResolveMessage(messageName);
-
-        // Copy oryginal message props to resolved message
-        for (var property in messageBody)
-        {
-            message[property] = messageBody[property];
-        }
+        let resolvedMessage: any = this.ResolveMessage(messageName);
+        let message: Object = Cqrs.MixMessages(resolvedMessage, messageBody); // Copy oryginal message props to resolved message
 
         // Validation
-        let validator: Validator = new Validator();//TODO: move to IoC
+        let validator: Validator = new Validator(); // TODO: move to IoC
         let errors: ValidationErrorInterface[] = validator.validate(message);
 
         if (errors.length != 0) 
         {
-            console.log('Validation errors:', errors);
+            console.log('Message validation errors:', errors);
 
             throw new Exception(ExceptionCode.ValidationProblem);
         }
-        else
-        {
-            let messageHandler: any = this.ResolveMessageHandler(messageName);
-    
-            return await messageHandler.Handle(message, context);
-        }
+
+        let messageHandler: any = this.ResolveMessageHandler(messageName);
+
+        return await messageHandler.Handle(message, context);
     }
 }
 

@@ -41,6 +41,7 @@ var Exception_1 = require("../exceptions/Exception");
 var ExceptionCode_1 = require("../shared/errors/ExceptionCode");
 var Cqrs = (function () {
     function Cqrs() {
+        console.log("CQRS class created");
     }
     Cqrs.PrintMessagesAndTheirHandlers = function () {
         console.log("Messages:", Object.keys(this._messages).toString());
@@ -70,9 +71,15 @@ var Cqrs = (function () {
         }
         return inversify_config_1.container.get(this._messageHandlers[msgName]);
     };
+    Cqrs.MixMessages = function (target, source) {
+        for (var p in source) {
+            target[p] = source[p];
+        }
+        return target;
+    };
     Cqrs.Execute = function (messagePackage, context) {
         return __awaiter(this, void 0, void 0, function () {
-            var messageName, messageBody, message, property, validator, errors, messageHandler;
+            var messageName, messageBody, resolvedMessage, message, validator, errors, messageHandler;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
@@ -80,19 +87,17 @@ var Cqrs = (function () {
                         messageBody = messagePackage[messageName];
                         console.log("Handling " + messageName + "...");
                         console.log('with body:', messageBody);
-                        message = this.ResolveMessage(messageName);
-                        for (property in messageBody) {
-                            message[property] = messageBody[property];
-                        }
+                        resolvedMessage = this.ResolveMessage(messageName);
+                        message = Cqrs.MixMessages(resolvedMessage, messageBody);
                         validator = new Validator_1.Validator();
                         errors = validator.validate(message);
-                        if (!(errors.length != 0)) return [3, 1];
-                        console.log('Validation errors:', errors);
-                        throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.ValidationProblem);
-                    case 1:
+                        if (errors.length != 0) {
+                            console.log('Message validation errors:', errors);
+                            throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.ValidationProblem);
+                        }
                         messageHandler = this.ResolveMessageHandler(messageName);
                         return [4, messageHandler.Handle(message, context)];
-                    case 2: return [2, _a.sent()];
+                    case 1: return [2, _a.sent()];
                 }
             });
         });
