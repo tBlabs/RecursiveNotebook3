@@ -8,12 +8,13 @@ import { Exception } from "../exceptions/Exception";
 import { ExceptionCode } from "../shared/errors/ExceptionCode";
 import { ValidationErrorInterface } from "validator.ts/ValidationErrorInterface";
 
-
 @injectable()
 export class Cqrs
 {
     private _messages = {};
     private _messageHandlers = {};
+
+    constructor(private _validator: Validator) { }
 
     public PrintMessagesAndTheirHandlers() 
     {
@@ -47,9 +48,9 @@ export class Cqrs
         return container.get(this._messages[msgName]);
     }
 
-    public ResolveMessageHandler(messageName): any
+    public ResolveMessageHandler(messageName: string): any
     {
-        let msgName = Object.keys(this._messageHandlers).find(i => i === messageName);
+        let msgName = Object.keys(this._messageHandlers).find(key => key === messageName);
 
         if (msgName === undefined) 
         {
@@ -61,7 +62,7 @@ export class Cqrs
         return container.get(this._messageHandlers[msgName]);
     }
 
-    public MixMessages(target: Object, source: Object): Object
+    private Mix(target: Object, source: Object): Object
     {
         for (let p in source)
         {
@@ -71,28 +72,42 @@ export class Cqrs
         return target;
     }
 
-    public async Execute(messagePackage: Object, context: Context): Promise<any>
+    private MessageBuilder(messagePackage: Object): Object
     {
         let messageName: string = Object.keys(messagePackage)[0]; // First key is a message class name
         let messageBody: Object = messagePackage[messageName]; // Value of first key is message class body/properties
 
-        console.log("Handling " + messageName + "...");
-        console.log('with body:', messageBody);
-
         let resolvedMessage: any = this.ResolveMessage(messageName);
-        let message: Object = this.MixMessages(resolvedMessage, messageBody); // Copy oryginal message props to resolved message
+        return this.Mix(resolvedMessage, messageBody); // Copy oryginal message props to resolved message
+    }
 
-        // Validation
-        let validator: Validator = new Validator(); // TODO: move to IoC
-        let errors: ValidationErrorInterface[] = validator.validate(message);
+    private MessageValidator(message): ValidationErrorInterface[] | null
+    {
+        let errors: ValidationErrorInterface[] = this._validator.validate(message);
 
         if (errors.length != 0) 
         {
-            console.log('Message validation errors:', errors);
-
-            throw new Exception(ExceptionCode.ValidationProblem);
+            return errors;
         }
 
+        return null;
+    }
+
+    public async Execute(messagePackage: Object, context: Context): Promise<any>
+    {
+        let message: Object = this.MessageBuilder(messagePackage);
+
+        let validationErrors = null;
+        if ((validationErrors = this.MessageValidator(message)) != null)
+        {
+            console.log('Message validation errors:', validationErrors);
+
+            throw new Exception(ExceptionCode.ValidationProblem);            
+        }
+   
+        console.log("Handling ", message);
+
+        let messageName = Object.keys(messagePackage)[0];
         let messageHandler: any = this.ResolveMessageHandler(messageName);
 
         return await messageHandler.Handle(message, context);

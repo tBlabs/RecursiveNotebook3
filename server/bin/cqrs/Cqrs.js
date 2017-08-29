@@ -5,6 +5,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     return new (P || (P = Promise))(function (resolve, reject) {
         function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
@@ -48,7 +51,8 @@ var inversify_config_1 = require("../inversify.config");
 var Exception_1 = require("../exceptions/Exception");
 var ExceptionCode_1 = require("../shared/errors/ExceptionCode");
 var Cqrs = (function () {
-    function Cqrs() {
+    function Cqrs(_validator) {
+        this._validator = _validator;
         this._messages = {};
         this._messageHandlers = {};
     }
@@ -73,37 +77,46 @@ var Cqrs = (function () {
         return inversify_config_1.container.get(this._messages[msgName]);
     };
     Cqrs.prototype.ResolveMessageHandler = function (messageName) {
-        var msgName = Object.keys(this._messageHandlers).find(function (i) { return i === messageName; });
+        var msgName = Object.keys(this._messageHandlers).find(function (key) { return key === messageName; });
         if (msgName === undefined) {
             console.log("Can not find handler for message \"" + messageName + "\"");
             throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.CanNotResolveMessageHandler);
         }
         return inversify_config_1.container.get(this._messageHandlers[msgName]);
     };
-    Cqrs.prototype.MixMessages = function (target, source) {
+    Cqrs.prototype.Mix = function (target, source) {
         for (var p in source) {
             target[p] = source[p];
         }
         return target;
     };
+    Cqrs.prototype.MessageBuilder = function (messagePackage) {
+        var messageName = Object.keys(messagePackage)[0];
+        var messageBody = messagePackage[messageName];
+        var resolvedMessage = this.ResolveMessage(messageName);
+        return this.Mix(resolvedMessage, messageBody);
+    };
+    Cqrs.prototype.MessageValidator = function (message) {
+        var errors = this._validator.validate(message);
+        if (errors.length != 0) {
+            return errors;
+        }
+        return null;
+    };
     Cqrs.prototype.Execute = function (messagePackage, context) {
         return __awaiter(this, void 0, void 0, function () {
-            var messageName, messageBody, resolvedMessage, message, validator, errors, messageHandler;
+            var message, validationErrors, messageName, messageHandler;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        messageName = Object.keys(messagePackage)[0];
-                        messageBody = messagePackage[messageName];
-                        console.log("Handling " + messageName + "...");
-                        console.log('with body:', messageBody);
-                        resolvedMessage = this.ResolveMessage(messageName);
-                        message = this.MixMessages(resolvedMessage, messageBody);
-                        validator = new Validator_1.Validator();
-                        errors = validator.validate(message);
-                        if (errors.length != 0) {
-                            console.log('Message validation errors:', errors);
+                        message = this.MessageBuilder(messagePackage);
+                        validationErrors = null;
+                        if ((validationErrors = this.MessageValidator(message)) != null) {
+                            console.log('Message validation errors:', validationErrors);
                             throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.ValidationProblem);
                         }
+                        console.log("Handling ", message);
+                        messageName = Object.keys(messagePackage)[0];
                         messageHandler = this.ResolveMessageHandler(messageName);
                         return [4, messageHandler.Handle(message, context)];
                     case 1: return [2, _a.sent()];
@@ -114,7 +127,8 @@ var Cqrs = (function () {
     return Cqrs;
 }());
 Cqrs = __decorate([
-    inversify_1.injectable()
+    inversify_1.injectable(),
+    __metadata("design:paramtypes", [Validator_1.Validator])
 ], Cqrs);
 exports.Cqrs = Cqrs;
 //# sourceMappingURL=Cqrs.js.map

@@ -19,7 +19,7 @@ import { OK } from 'http-status-codes';
 
 class Startup
 {
-    public static async HandleCqrsBus(request, respond)
+    public static async HandleCqrsBus(request, respond): Promise<void>
     {
         let context: Context = new Context();
 
@@ -46,7 +46,7 @@ class Startup
             console.log('----------------------------------------------');
 
             let cqrs: Cqrs = container.get(Cqrs);
-            cqrs.PrintMessagesAndTheirHandlers();
+
             let result = await cqrs.Execute(request.body, context);
 
             console.log('Handler result:', result);
@@ -71,7 +71,7 @@ class Startup
     }
 
 
-    public static async Start(): Promise<void>
+    public static Start(): void
     {
         console.log("*** START ***");
 
