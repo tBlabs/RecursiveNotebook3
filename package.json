@@ -11,7 +11,7 @@
     "init": "sudo npm i && sudo npm i typescript jasmine -g && sudo rm ./server/node_modules -rf && sudo mv ./node_modules ./server -f",
     "init2": "sudo npm i && sudo npm i typescript jasmine -g",
     "cleanserver": "rm server/bin -rf",
-    "buildclient": "cp shared client/src/app -r",
+    "buildclient": "cp shared client/src/app -r && cd client && ng build",
     "buildserver": "cp shared server/src -r && tsc -p server",
     "buildall": "npm run buildserver && npm run buildclient",
     "start": "node server/bin/startup.js",
