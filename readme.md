@@ -25,6 +25,7 @@ Look at package.json in main dir. There is many commands for many things.
 Basic run requires run of two commands (in separate terminals):
 - npm run buildandrunclient
 - npm run buildandrunserver
+
 This will run client at localhost:4200 and server at localhost:3000
 
 # For editors..
@@ -32,4 +33,5 @@ This will run client at localhost:4200 and server at localhost:3000
 Watch out for /shared folder. Files from there are copied before every build to 
 - client/app/src
 - server/src
+
 Do not edit those files from there! They will be overridden!
