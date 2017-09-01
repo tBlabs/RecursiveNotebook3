@@ -1,8 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-var Validator_1 = require("validator.ts/Validator");
-var Cqrs_1 = require("./cqrs/Cqrs");
 var inversify_1 = require("inversify");
+var Cqrs_1 = require("./cqrs/Cqrs");
+var Validator_1 = require("validator.ts/Validator");
 var AuthService_1 = require("./services/AuthService");
 var NotesRepo_1 = require("./repositories/NotesRepo");
 var Database_1 = require("./database/Database");

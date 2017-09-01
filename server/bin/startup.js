@@ -37,12 +37,12 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 require('dotenv').config();
 var inversify_config_1 = require("./inversify.config");
+require("./handlers");
 var Exception_1 = require("./exceptions/Exception");
 var errors_1 = require("./shared/errors/errors");
 var ExceptionCode_1 = require("./shared/errors/ExceptionCode");
 var AuthService_1 = require("./services/AuthService");
 var Context_1 = require("./framework/Context");
-require("./handlers");
 var express = require("express");
 var bodyParser = require("body-parser");
 var Cqrs_1 = require("./cqrs/Cqrs");

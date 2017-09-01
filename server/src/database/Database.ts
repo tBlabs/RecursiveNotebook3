@@ -1,7 +1,7 @@
+import { Validator } from 'validator.ts/Validator';
 import { injectable, inject } from 'inversify';
 import 'reflect-metadata'
 import { MongoClient, Collection, MongoError, Db } from 'mongodb';
-
 
 @injectable()
 export class Database

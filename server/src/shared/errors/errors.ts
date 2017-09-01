@@ -21,7 +21,7 @@ export const SERVER_EXCEPTIONS: ServerException[] =
         { code: ExceptionCode.CanNotResolveMessageHandler, message: "No handler for message", httpStatus: BAD_REQUEST },
         { code: ExceptionCode.Unauthorized, message: "Unauthorized", httpStatus: UNAUTHORIZED },
         { code: ExceptionCode.WrongPassword, message: "Wrong password", httpStatus: UNAUTHORIZED },
-        { code: ExceptionCode.EmailTaken, message: "Email taken", httpStatus: UNAUTHORIZED },
+        { code: ExceptionCode.EmailTaken, message: "Email already taken", httpStatus: UNAUTHORIZED },
         { code: ExceptionCode.UserNotExists, message: "User not exists", httpStatus: UNAUTHORIZED },
         { code: ExceptionCode.NoPermission, message: "No permission", httpStatus: UNAUTHORIZED },   
         { code: ExceptionCode.InvalidUserEmail, message: "Invalid user email", httpStatus: UNAUTHORIZED },

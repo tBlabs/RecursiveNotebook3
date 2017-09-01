@@ -4,8 +4,8 @@
   "description": "recursive notebook",
   "main": "server/startup.js",
   "engines": {
-    "node": "7.9.0",
-    "npm": "4.2.0"
+    "node": "8.4.0",
+    "npm": "5.3.0"
   },
   "scripts": {
     "init": "sudo npm i && sudo npm i typescript jasmine -g && sudo rm ./server/node_modules -rf && sudo mv ./node_modules ./server -f",
@@ -21,7 +21,7 @@
     "buildandrunserver": "npm run buildserver && npm run runserver",
     "deploy": "git push heroku master && heroku logs --tail",
     "fastdeploy": "npm run buildall && git add . && git commit -m \"fast deploy\" && npm run deploy",
-    "testserver": "clear && npm run buildserver && jasmine --config=./server/src/spec/support/jasmine.json"
+    "testserver": "npm run cleanserver && clear && npm run buildserver && jasmine --config=./server/src/spec/support/jasmine.json"
   },
   "author": "tB",
   "license": "freeBeer",

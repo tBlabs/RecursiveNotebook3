@@ -15,7 +15,7 @@ exports.SERVER_EXCEPTIONS = [
     { code: ExceptionCode_1.ExceptionCode.CanNotResolveMessageHandler, message: "No handler for message", httpStatus: http_status_codes_1.BAD_REQUEST },
     { code: ExceptionCode_1.ExceptionCode.Unauthorized, message: "Unauthorized", httpStatus: http_status_codes_1.UNAUTHORIZED },
     { code: ExceptionCode_1.ExceptionCode.WrongPassword, message: "Wrong password", httpStatus: http_status_codes_1.UNAUTHORIZED },
-    { code: ExceptionCode_1.ExceptionCode.EmailTaken, message: "Email taken", httpStatus: http_status_codes_1.UNAUTHORIZED },
+    { code: ExceptionCode_1.ExceptionCode.EmailTaken, message: "Email already taken", httpStatus: http_status_codes_1.UNAUTHORIZED },
     { code: ExceptionCode_1.ExceptionCode.UserNotExists, message: "User not exists", httpStatus: http_status_codes_1.UNAUTHORIZED },
     { code: ExceptionCode_1.ExceptionCode.NoPermission, message: "No permission", httpStatus: http_status_codes_1.UNAUTHORIZED },
     { code: ExceptionCode_1.ExceptionCode.InvalidUserEmail, message: "Invalid user email", httpStatus: http_status_codes_1.UNAUTHORIZED },

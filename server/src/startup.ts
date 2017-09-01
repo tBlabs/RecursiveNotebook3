@@ -1,6 +1,7 @@
 require('dotenv').config(); // Loads variables from '.env' file to process.env
 
 import { container } from "./inversify.config"; // This must be before handlers import (messages and handlers uses decorators which uses container)
+import './handlers'; // This import is required here (in app entry point) because of necessity of call AssignMessage for every handler class
 
 import { Exception } from "./exceptions/Exception";
 import { ServerException } from "./shared/errors/errors";
@@ -8,7 +9,6 @@ import { SERVER_EXCEPTIONS } from './shared/errors/errors';
 import { ExceptionCode } from './shared/errors/ExceptionCode';
 import { AuthService } from './services/AuthService';
 import { Context } from './framework/Context';
-import './handlers'; // This import is required here (in app entry point) because of necessity of call AssignMessage for every handler class
 import * as express from 'express';
 import * as bodyParser from 'body-parser';
 import { User } from "./framework/User";

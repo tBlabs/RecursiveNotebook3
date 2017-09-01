@@ -115,7 +115,7 @@ var Cqrs = (function () {
                             console.log('Message validation errors:', validationErrors);
                             throw new Exception_1.Exception(ExceptionCode_1.ExceptionCode.ValidationProblem);
                         }
-                        console.log("Handling ", message);
+                        console.log("Handling", message);
                         messageName = Object.keys(messagePackage)[0];
                         messageHandler = this.ResolveMessageHandler(messageName);
                         return [4, messageHandler.Handle(message, context)];

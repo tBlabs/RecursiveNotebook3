@@ -1,7 +1,6 @@
 import { injectable } from "inversify";
 import 'reflect-metadata';
 import { Validator } from 'validator.ts/Validator';
-import { ICommandHandler } from './ICommandHandler';
 import { container } from "../inversify.config";
 import { Context } from "../framework/Context";
 import { Exception } from "../exceptions/Exception";
@@ -72,7 +71,7 @@ export class Cqrs
         return target;
     }
 
-    private MessageBuilder(messagePackage: Object): Object
+    public MessageBuilder(messagePackage: Object): Object
     {
         let messageName: string = Object.keys(messagePackage)[0]; // First key is a message class name
         let messageBody: Object = messagePackage[messageName]; // Value of first key is message class body/properties
@@ -81,7 +80,7 @@ export class Cqrs
         return this.Mix(resolvedMessage, messageBody); // Copy oryginal message props to resolved message
     }
 
-    private MessageValidator(message): ValidationErrorInterface[] | null
+    public MessageValidator(message): ValidationErrorInterface[] | null
     {
         let errors: ValidationErrorInterface[] = this._validator.validate(message);
 
@@ -102,10 +101,10 @@ export class Cqrs
         {
             console.log('Message validation errors:', validationErrors);
 
-            throw new Exception(ExceptionCode.ValidationProblem);            
+            throw new Exception(ExceptionCode.ValidationProblem);
         }
-   
-        console.log("Handling ", message);
+
+        console.log("Handling", message);
 
         let messageName = Object.keys(messagePackage)[0];
         let messageHandler: any = this.ResolveMessageHandler(messageName);
