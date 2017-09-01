@@ -1,14 +1,14 @@
-#Live demo
+# Live demo
 
 www.r-book.herokuapp.com
 
-#TODO
+# TODO
 
 - restore tests (there is some kind of problem with DI in message-validation.spec, that's why all tests are disabled)
 - move messages (commands and queries) to /shared folder (this is not easy because of many reasons: mainly because of inject decorators)
 - client validation is not even started..
 
-#Architecture
+# Architecture
 
 - Express as a server + Mongo DB
 - CQRS with one bus on one endpoint
@@ -19,7 +19,7 @@ www.r-book.herokuapp.com
 - Decorators for easier registering messages and handlers
 - .env for keeping enviroment variables (dotenv)
 
-#Build and run
+# Build and run
 
 Look at package.json in main dir. There is many commands for many things.
 Basic run requires run of two commands (in separate terminals):
@@ -27,7 +27,7 @@ Basic run requires run of two commands (in separate terminals):
 - npm run buildandrunserver
 This will run client at localhost:4200 and server at localhost:3000
 
-#For editors..
+# For editors..
 
 Watch out for /shared folder. Files from there are copied before every build to 
 - client/app/src
