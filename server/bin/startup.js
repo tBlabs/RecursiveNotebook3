@@ -103,7 +103,7 @@ var Startup = (function () {
         host.all('/*', function (req, res, next) {
             res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
-            res.header("Access-Control-Allow-Methods", "POST");
+            res.header("Access-Control-Allow-Methods", "GET,POST");
             next();
         });
         host.use(express.static(__dirname + '/../../client/dist'));
