@@ -101,7 +101,7 @@ var Startup = (function () {
         var host = express();
         host.use(bodyParser.json());
         host.all('/*', function (req, res, next) {
-            res.header("Access-Control-Allow-Origin", "http://localhost:4200");
+            res.header("Access-Control-Allow-Origin", "*");
             res.header("Access-Control-Allow-Headers", "Content-Type,Authorization");
             res.header("Access-Control-Allow-Methods", "POST");
             next();
