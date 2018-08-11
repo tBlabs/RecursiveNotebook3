@@ -1,6 +1,6 @@
 # Live demo
 
-www.r-book.herokuapp.com
+http://r-book.herokuapp.com
 
 # TODO
 
@@ -10,8 +10,10 @@ www.r-book.herokuapp.com
 
 # Architecture
 
-- Express as a server + Mongo DB
-- CQRS with one bus on one endpoint
+- Very Object Oriented design (thanks to TypeScript :)
+- Express.js server
+- MongoDb
+- CQRS bus with one endpoint
 - IoC/DI (for messages and their handlers and few services)
 - JWT (for user logging tokens)
 - Repo pattern for notes
@@ -30,7 +32,7 @@ This will run client at localhost:4200 and server at localhost:3000
 
 # For editors..
 
-Watch out for /shared folder. Files from there are copied before every build to 
+Watch out for `/shared` folder. Files from there are copied before every build to 
 - client/app/src
 - server/src
 
